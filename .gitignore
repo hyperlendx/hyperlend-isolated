@@ -14,3 +14,5 @@ artifacts
 
 # typechain
 typechain
+
+deploy/deployments

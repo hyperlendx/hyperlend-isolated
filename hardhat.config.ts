@@ -5,6 +5,9 @@ import "hardhat-gas-reporter";
 import "hardhat-preprocessor";
 import "solidity-coverage";
 
+import "@nomiclabs/hardhat-web3";
+import "@nomiclabs/hardhat-waffle";
+
 dotenvConfig();
 
 // Ensure that we have all the environment variables we need.
