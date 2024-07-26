@@ -13,12 +13,14 @@ dotenvConfig();
 // Ensure that we have all the environment variables we need.
 const mnemonic = process.env.MNEMONIC as string;
 const mainnetUrl = process.env.MAINNET_URL as string;
+const arbitrumUrl = process.env.ARBITRUM_URL as string;
 
 const chainIds = {
   hardhat: 1337,
   mainnet: 1,
   "polygon-mainnet": 137,
   rinkeby: 4,
+  arbitrum: 42161
 };
 
 function getRemappings() {
@@ -48,24 +50,11 @@ const config: HardhatUserConfig = {
       //   blockNumber: Number.parseInt(process.env.DEFAULT_FORK_BLOCK as string),
       // },
     },
-    // mainnet: {
-    //   accounts: [process.env.PRIVATE_KEY as string],
-    //   chainId: chainIds.mainnet,
-    //   url: mainnetUrl,
-    // },
-    // "polygon-mainnet": {
-    //   accounts: [process.env.PRIVATE_KEY as string],
-    //   chainId: chainIds["polygon-mainnet"],
-    //   url: process.env.POLYGON_MAINNET_URL,
-    //   timeout: 100000,
-    // },
-    // rinkeby: {
-    //   accounts: {
-    //     mnemonic
-    //   },
-    //   chainId: chainIds.rinkeby,
-    //   url: process.env.RINKEBY_URL,
-    // },
+    arbitrum: {
+        accounts: [process.env.PRIVATE_KEY as string],
+        chainId: chainIds.arbitrum,
+        url: arbitrumUrl,
+    }
   },
   paths: {
     artifacts: "./artifacts",
@@ -78,7 +67,7 @@ const config: HardhatUserConfig = {
       {
         version: "0.8.19",
         settings: {
-          // viaIR: true,
+          viaIR: true,
           metadata: {
             // Not including the metadata hash
             // https://github.com/paulrberg/solidity-template/issues/31
