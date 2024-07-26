@@ -98,16 +98,13 @@ contract HyperlendPairDeployer is Ownable {
         address _asset,
         address _collateral
     ) public view returns (string memory _name, string memory _symbol) {
-        uint256 _length = IHyperlendPairRegistry(hyperlendPairRegistryAddress).deployedPairsLength();
         _name = string(
             abi.encodePacked(
                 "Hyperlend Interest Bearing ",
                 IERC20(_asset).safeSymbol(),
                 " (",
                 IERC20(_collateral).safeName(),
-                ")",
-                " - ",
-                (_length + 1).toString()
+                ")"
             )
         );
         _symbol = string(
@@ -116,9 +113,7 @@ contract HyperlendPairDeployer is Ownable {
                 IERC20(_asset).safeSymbol(),
                 "(",
                 IERC20(_collateral).safeSymbol(),
-                ")",
-                "-",
-                (_length + 1).toString()
+                ")"
             )
         );
     }
