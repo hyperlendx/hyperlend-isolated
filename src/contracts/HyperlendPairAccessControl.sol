@@ -58,7 +58,6 @@ abstract contract HyperlendPairAccessControl is Timelock2Step, Ownable2Step, Hyp
         if (
             msg.sender != circuitBreakerAddress &&
             msg.sender != owner() &&
-            msg.sender != DEPLOYER_ADDRESS &&
             msg.sender != timelockAddress
         ) {
             revert OnlyProtocolOrOwner();
