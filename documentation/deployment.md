@@ -25,25 +25,14 @@ Privileged addresses
 
 Governance config:
 
-Total signers: 8
+Total signers: 10
 
 - MarketDeployer: Ledger cold wallet
 - CircuitBreaker: GnosisSafe, 1 signer required
 - Timelock owner: GnosisSafe Governance, 4 signers required
 - Comptroller: GnosisSafe Governance, 4 signers required
 - Whitelist owner: GnosisSafe Governance, 4 signers required
-- Treasury: GnosisSafe Treasury, 5 of 8
-
-fbsloXBT: 3
-0xnessus: 2
-sventure5: 1
-maiviuss: 1
-tee_hary: 1
-
-Arbitrum addresses:
-    - GnosisSafe CircuitBreaker: [arb1:0x03C734090be6C151fbF1cc90ed1Ac4ff35bEBEc0](https://app.safe.global/home?safe=arb1:0x03C734090be6C151fbF1cc90ed1Ac4ff35bEBEc0)
-    - GnosisSafe Governance: [arb1:0x4b3b779b2E9816078cD4cD754B9dD2AB02Ea5558](https://app.safe.global/home?safe=arb1:0x4b3b779b2E9816078cD4cD754B9dD2AB02Ea5558)
-    - GnosisSafe Treasury: [arb1:0x76A99A03c44eEAe3f596017BBA48647A69A429c9](https://app.safe.global/home?safe=arb1:0x76A99A03c44eEAe3f596017BBA48647A69A429c9)
+- Treasury: GnosisSafe Treasury, 6 signers required
 
 ---
 
