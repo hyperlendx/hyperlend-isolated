@@ -3,7 +3,7 @@ pragma solidity ^0.8.19;
 
 // ======================= HyperlendWhitelist ==========================
 
-import { Ownable2Step } from "@openzeppelin/contracts/access/Ownable2Step.sol";
+import {Ownable2Step} from '@openzeppelin/contracts/access/Ownable2Step.sol';
 
 contract HyperlendWhitelist is Ownable2Step {
     /// @notice Hyperlend Deployer Whitelist mapping.
@@ -19,7 +19,10 @@ contract HyperlendWhitelist is Ownable2Step {
     /// @notice The ```setHyperlendDeployerWhitelist``` function sets a given address to true/false for use as a custom deployer.
     /// @param _addresses addresses to set status for.
     /// @param _bool status of approval.
-    function setHyperlendDeployerWhitelist(address[] calldata _addresses, bool _bool) external onlyOwner {
+    function setHyperlendDeployerWhitelist(
+        address[] calldata _addresses,
+        bool _bool
+    ) external onlyOwner {
         for (uint256 i = 0; i < _addresses.length; i++) {
             hyperlendDeployerWhitelist[_addresses[i]] = _bool;
             emit SetHyperlendDeployerWhitelist(_addresses[i], _bool);

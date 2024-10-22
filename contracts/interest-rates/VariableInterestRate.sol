@@ -3,8 +3,8 @@ pragma solidity ^0.8.19;
 
 // ====================== VariableInterestRate ========================
 
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
-import { IRateCalculatorV2 } from "../interfaces/IRateCalculatorV2.sol";
+import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
+import {IRateCalculatorV2} from '../interfaces/IRateCalculatorV2.sol';
 
 /// @title A formula for calculating interest rates as a function of utilization and time
 /// @notice A Contract for calculating interest rates as a function of utilization and time
@@ -73,7 +73,7 @@ contract VariableInterestRate is IRateCalculatorV2 {
     /// @notice The ```name``` function returns the name of the rate contract
     /// @return memory name of contract
     function name() external view returns (string memory) {
-        return string(abi.encodePacked("Variable Rate V2 ", suffix));
+        return string(abi.encodePacked('Variable Rate V2 ', suffix));
     }
 
     /// @notice The ```version``` function returns the semantic version of the rate contract
@@ -102,16 +102,23 @@ contract VariableInterestRate is IRateCalculatorV2 {
             // 18 decimals
             uint256 _deltaUtilization = ((MIN_TARGET_UTIL - _utilization) * 1e18) / MIN_TARGET_UTIL;
             // 36 decimals
-            uint256 _decayGrowth = (RATE_HALF_LIFE * 1e36) + (_deltaUtilization * _deltaUtilization * _deltaTime);
+            uint256 _decayGrowth = (RATE_HALF_LIFE * 1e36) +
+                (_deltaUtilization * _deltaUtilization * _deltaTime);
             // 18 decimals
-            _newFullUtilizationInterest = uint64((_fullUtilizationInterest * (RATE_HALF_LIFE * 1e36)) / _decayGrowth);
+            _newFullUtilizationInterest = uint64(
+                (_fullUtilizationInterest * (RATE_HALF_LIFE * 1e36)) / _decayGrowth
+            );
         } else if (_utilization > MAX_TARGET_UTIL) {
             // 18 decimals
-            uint256 _deltaUtilization = ((_utilization - MAX_TARGET_UTIL) * 1e18) / (UTIL_PREC - MAX_TARGET_UTIL);
+            uint256 _deltaUtilization = ((_utilization - MAX_TARGET_UTIL) * 1e18) /
+                (UTIL_PREC - MAX_TARGET_UTIL);
             // 36 decimals
-            uint256 _decayGrowth = (RATE_HALF_LIFE * 1e36) + (_deltaUtilization * _deltaUtilization * _deltaTime);
+            uint256 _decayGrowth = (RATE_HALF_LIFE * 1e36) +
+                (_deltaUtilization * _deltaUtilization * _deltaTime);
             // 18 decimals
-            _newFullUtilizationInterest = uint64((_fullUtilizationInterest * _decayGrowth) / (RATE_HALF_LIFE * 1e36));
+            _newFullUtilizationInterest = uint64(
+                (_fullUtilizationInterest * _decayGrowth) / (RATE_HALF_LIFE * 1e36)
+            );
         } else {
             _newFullUtilizationInterest = _fullUtilizationInterest;
         }
@@ -133,11 +140,15 @@ contract VariableInterestRate is IRateCalculatorV2 {
         uint256 _utilization,
         uint64 _oldFullUtilizationInterest
     ) external view returns (uint64 _newRatePerSec, uint64 _newFullUtilizationInterest) {
-        _newFullUtilizationInterest = getFullUtilizationInterest(_deltaTime, _utilization, _oldFullUtilizationInterest);
+        _newFullUtilizationInterest = getFullUtilizationInterest(
+            _deltaTime,
+            _utilization,
+            _oldFullUtilizationInterest
+        );
 
         // _vertexInterest is calculated as the percentage of the delta between min and max interest
-        uint256 _vertexInterest = (((_newFullUtilizationInterest - ZERO_UTIL_RATE) * VERTEX_RATE_PERCENT) / RATE_PREC) +
-            ZERO_UTIL_RATE;
+        uint256 _vertexInterest = (((_newFullUtilizationInterest - ZERO_UTIL_RATE) *
+            VERTEX_RATE_PERCENT) / RATE_PREC) + ZERO_UTIL_RATE;
         if (_utilization < VERTEX_UTILIZATION) {
             // For readability, the following formula is equivalent to:
             // uint256 _slope = ((_vertexInterest - ZERO_UTIL_RATE) * UTIL_PREC) / VERTEX_UTILIZATION;
@@ -145,7 +156,9 @@ contract VariableInterestRate is IRateCalculatorV2 {
 
             // 18 decimals
             _newRatePerSec = uint64(
-                ZERO_UTIL_RATE + (_utilization * (_vertexInterest - ZERO_UTIL_RATE)) / VERTEX_UTILIZATION
+                ZERO_UTIL_RATE +
+                    (_utilization * (_vertexInterest - ZERO_UTIL_RATE)) /
+                    VERTEX_UTILIZATION
             );
         } else {
             // For readability, the following formula is equivalent to:
@@ -155,7 +168,8 @@ contract VariableInterestRate is IRateCalculatorV2 {
             // 18 decimals
             _newRatePerSec = uint64(
                 _vertexInterest +
-                    ((_utilization - VERTEX_UTILIZATION) * (_newFullUtilizationInterest - _vertexInterest)) /
+                    ((_utilization - VERTEX_UTILIZATION) *
+                        (_newFullUtilizationInterest - _vertexInterest)) /
                     (UTIL_PREC - VERTEX_UTILIZATION)
             );
         }

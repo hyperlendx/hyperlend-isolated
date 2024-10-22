@@ -34,7 +34,6 @@ Total signers: 8
 - Whitelist owner: GnosisSafe Governance, 4 signers required
 - Treasury: GnosisSafe Treasury, 5 of 8
 
-
 fbsloXBT: 3
 0xnessus: 2
 sventure5: 1

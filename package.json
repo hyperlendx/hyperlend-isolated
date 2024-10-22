@@ -1,10 +1,11 @@
 {
-  "name": "hyperlend",
+  "name": "hyperlend-isolated",
   "version": "1.0.0",
-  "description": "Hyperlend contracts",
+  "description": "Hyperlend isolated contracts",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "npx prettier --write --plugin=prettier-plugin-solidity contracts/"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,9 @@
     "solidity-bytes-utils": "^0.8.0",
     "solidity-coverage": "^0.7.21",
     "ts-node": "^10.9.1",
-    "typechain": "^8.1.0"
+    "typechain": "^8.1.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1"
   },
   "dependencies": {
     "@mean-finance/uniswap-v3-oracle": "^1.0.3",

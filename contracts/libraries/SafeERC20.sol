@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-import { IERC20 } from "@openzeppelin/contracts/interfaces/IERC20.sol";
-import { SafeERC20 as OZSafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20} from '@openzeppelin/contracts/interfaces/IERC20.sol';
+import {SafeERC20 as OZSafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
 // solhint-disable avoid-low-level-calls
 // solhint-disable max-line-length
@@ -29,7 +29,7 @@ library SafeERC20 {
             }
             return string(bytesArray);
         } else {
-            return "???";
+            return '???';
         }
     }
 
@@ -37,23 +37,29 @@ library SafeERC20 {
     /// @param token The address of the ERC-20 token contract.
     /// @return (string) Token symbol.
     function safeSymbol(IERC20 token) internal view returns (string memory) {
-        (bool success, bytes memory data) = address(token).staticcall(abi.encodeWithSelector(SIG_SYMBOL));
-        return success ? returnDataToString(data) : "???";
+        (bool success, bytes memory data) = address(token).staticcall(
+            abi.encodeWithSelector(SIG_SYMBOL)
+        );
+        return success ? returnDataToString(data) : '???';
     }
 
     /// @notice Provides a safe ERC20.name version which returns '???' as fallback string.
     /// @param token The address of the ERC-20 token contract.
     /// @return (string) Token name.
     function safeName(IERC20 token) internal view returns (string memory) {
-        (bool success, bytes memory data) = address(token).staticcall(abi.encodeWithSelector(SIG_NAME));
-        return success ? returnDataToString(data) : "???";
+        (bool success, bytes memory data) = address(token).staticcall(
+            abi.encodeWithSelector(SIG_NAME)
+        );
+        return success ? returnDataToString(data) : '???';
     }
 
     /// @notice Provides a safe ERC20.decimals version which returns '18' as fallback value.
     /// @param token The address of the ERC-20 token contract.
     /// @return (uint8) Token decimals.
     function safeDecimals(IERC20 token) internal view returns (uint8) {
-        (bool success, bytes memory data) = address(token).staticcall(abi.encodeWithSelector(SIG_DECIMALS));
+        (bool success, bytes memory data) = address(token).staticcall(
+            abi.encodeWithSelector(SIG_DECIMALS)
+        );
         return success && data.length == 32 ? abi.decode(data, (uint8)) : 18;
     }
 

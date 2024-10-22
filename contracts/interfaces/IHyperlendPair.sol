@@ -119,7 +119,14 @@ interface IHyperlendPair {
 
     function getUserSnapshot(
         address _address
-    ) external view returns (uint256 _userAssetShares, uint256 _userBorrowShares, uint256 _userCollateralBalance);
+    )
+        external
+        view
+        returns (
+            uint256 _userAssetShares,
+            uint256 _userBorrowShares,
+            uint256 _userCollateralBalance
+        );
 
     function increaseAllowance(address spender, uint256 addedValue) external returns (bool);
 
@@ -163,13 +170,20 @@ interface IHyperlendPair {
 
     function rateContract() external view returns (address);
 
-    function redeem(uint256 _shares, address _receiver, address _owner) external returns (uint256 _amountToReturn);
+    function redeem(
+        uint256 _shares,
+        address _receiver,
+        address _owner
+    ) external returns (uint256 _amountToReturn);
 
     function removeCollateral(uint256 _collateralAmount, address _receiver) external;
 
     function renounceOwnership() external;
 
-    function repayAsset(uint256 _shares, address _borrower) external returns (uint256 _amountToRepay);
+    function repayAsset(
+        uint256 _shares,
+        address _borrower
+    ) external returns (uint256 _amountToRepay);
 
     function repayAssetWithCollateral(
         address _swapperAddress,
@@ -224,5 +238,8 @@ interface IHyperlendPair {
 
     function version() external pure returns (uint256 _major, uint256 _minor, uint256 _patch);
 
-    function withdrawFees(uint128 _shares, address _recipient) external returns (uint256 _amountToTransfer);
+    function withdrawFees(
+        uint128 _shares,
+        address _recipient
+    ) external returns (uint256 _amountToTransfer);
 }

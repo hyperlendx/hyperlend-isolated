@@ -12,7 +12,7 @@ HyperLend adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to
 
 ## Overview
 
-![pairOverview](./documentation/_images/pairOverview.jpg)
+![pairOverview](./documentation/images/pairOverview.jpg)
 
 <br>
 <br>

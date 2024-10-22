@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.19;
 
-import { IERC165 } from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {IERC165} from '@openzeppelin/contracts/utils/introspection/IERC165.sol';
 
 interface IDualOracle is IERC165 {
     function ORACLE_PRECISION() external view returns (uint256);
@@ -16,9 +16,15 @@ interface IDualOracle is IERC165 {
 
     function decimals() external view returns (uint8);
 
-    function getPricesNormalized() external view returns (bool _isBadData, uint256 _priceLow, uint256 _priceHigh);
+    function getPricesNormalized()
+        external
+        view
+        returns (bool _isBadData, uint256 _priceLow, uint256 _priceHigh);
 
-    function getPrices() external view returns (bool _isBadData, uint256 _priceLow, uint256 _priceHigh);
+    function getPrices()
+        external
+        view
+        returns (bool _isBadData, uint256 _priceLow, uint256 _priceHigh);
 
     function name() external view returns (string memory);
 

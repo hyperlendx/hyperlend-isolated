@@ -3,21 +3,26 @@ pragma solidity ^0.8.19;
 
 // ========================= HyperlendPairCore =========================
 
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { HyperlendPairAccessControl } from "./HyperlendPairAccessControl.sol";
-import { HyperlendPairConstants } from "./HyperlendPairConstants.sol";
-import { VaultAccount, VaultAccountingLibrary } from "./libraries/VaultAccount.sol";
-import { SafeERC20 } from "./libraries/SafeERC20.sol";
-import { IDualOracle } from "./interfaces/IDualOracle.sol";
-import { IRateCalculatorV2 } from "./interfaces/IRateCalculatorV2.sol";
-import { ISwapper } from "./interfaces/ISwapper.sol";
+import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import {SafeCast} from '@openzeppelin/contracts/utils/math/SafeCast.sol';
+import {HyperlendPairAccessControl} from './HyperlendPairAccessControl.sol';
+import {HyperlendPairConstants} from './HyperlendPairConstants.sol';
+import {VaultAccount, VaultAccountingLibrary} from './libraries/VaultAccount.sol';
+import {SafeERC20} from './libraries/SafeERC20.sol';
+import {IDualOracle} from './interfaces/IDualOracle.sol';
+import {IRateCalculatorV2} from './interfaces/IRateCalculatorV2.sol';
+import {ISwapper} from './interfaces/ISwapper.sol';
 
 /// @title HyperlendPairCore
 /// @notice An abstract contract which contains the core logic and storage for the HyperlendPair
-abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPairConstants, ERC20, ReentrancyGuard {
+abstract contract HyperlendPairCore is
+    HyperlendPairAccessControl,
+    HyperlendPairConstants,
+    ERC20,
+    ReentrancyGuard
+{
     using VaultAccountingLibrary for VaultAccount;
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
@@ -116,7 +121,7 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         bytes memory _configData,
         bytes memory _immutables,
         bytes memory _customConfigData
-    ) HyperlendPairAccessControl(_immutables) ERC20("", "") {
+    ) HyperlendPairAccessControl(_immutables) ERC20('', '') {
         {
             (
                 address _asset,
@@ -157,10 +162,11 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         }
 
         {
-            (string memory _nameOfContract, string memory _symbolOfContract, uint8 _decimalsOfContract) = abi.decode(
-                _customConfigData,
-                (string, string, uint8)
-            );
+            (
+                string memory _nameOfContract,
+                string memory _symbolOfContract,
+                uint8 _decimalsOfContract
+            ) = abi.decode(_customConfigData, (string, string, uint8));
 
             // ERC20 Metadata
             nameOfContract = _nameOfContract;
@@ -200,7 +206,8 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         uint256 _collateralAmount = userCollateralBalance[_borrower];
         if (_collateralAmount == 0) return false;
 
-        uint256 _ltv = (((_borrowerAmount * _exchangeRate) / EXCHANGE_PRECISION) * LTV_PRECISION) / _collateralAmount;
+        uint256 _ltv = (((_borrowerAmount * _exchangeRate) / EXCHANGE_PRECISION) * LTV_PRECISION) /
+            _collateralAmount;
         return _ltv <= maxLTV;
     }
 
@@ -348,14 +355,13 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
                 : (UTIL_PREC * _results.totalBorrow.amount) / _results.totalAsset.amount;
 
             // Request new interest rate and full utilization rate from the rate calculator
-            (_results.newRate, _results.newFullUtilizationRate) = IRateCalculatorV2(rateContract).getNewRate(
-                _deltaTime,
-                _utilizationRate,
-                _currentRateInfo.fullUtilizationRate
-            );
+            (_results.newRate, _results.newFullUtilizationRate) = IRateCalculatorV2(rateContract)
+                .getNewRate(_deltaTime, _utilizationRate, _currentRateInfo.fullUtilizationRate);
 
             // Calculate interest accrued
-            _results.interestEarned = (_deltaTime * _results.totalBorrow.amount * _results.newRate) / RATE_PRECISION;
+            _results.interestEarned =
+                (_deltaTime * _results.totalBorrow.amount * _results.newRate) /
+                RATE_PRECISION;
 
             // Accrue interest (if any) and fees iff no overflow
             if (
@@ -479,7 +485,9 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         if (_exchangeRateInfo.lastTimestamp != block.timestamp) {
             // Get the latest exchange rate from the dual oracle
             bool _oneOracleBad;
-            (_oneOracleBad, _lowExchangeRate, _highExchangeRate) = IDualOracle(_exchangeRateInfo.oracle).getPrices();
+            (_oneOracleBad, _lowExchangeRate, _highExchangeRate) = IDualOracle(
+                _exchangeRateInfo.oracle
+            ).getPrices();
 
             // If one oracle is bad data, emit an event for off-chain monitoring
             if (_oneOracleBad) emit WarnOracleData(_exchangeRateInfo.oracle);
@@ -521,7 +529,12 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param _amount The amount of Asset Token to be transferred
     /// @param _shares The amount of Asset Shares (fTokens) to be minted
     /// @param _receiver The address to receive the Asset Shares (fTokens)
-    function _deposit(VaultAccount memory _totalAsset, uint128 _amount, uint128 _shares, address _receiver) internal {
+    function _deposit(
+        VaultAccount memory _totalAsset,
+        uint128 _amount,
+        uint128 _shares,
+        address _receiver
+    ) internal {
         // Effects: bookkeeping
         _totalAsset.amount += _amount;
         _totalAsset.shares += _shares;
@@ -545,7 +558,10 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param _amount The amount of Asset Token to transfer to Pair
     /// @param _receiver The address to receive the Asset Shares (fTokens)
     /// @return _sharesReceived The number of fTokens received for the deposit
-    function deposit(uint256 _amount, address _receiver) external nonReentrant returns (uint256 _sharesReceived) {
+    function deposit(
+        uint256 _amount,
+        address _receiver
+    ) external nonReentrant returns (uint256 _sharesReceived) {
         if (_receiver == address(0)) revert InvalidReceiver();
 
         // Accrue interest if necessary
@@ -569,7 +585,10 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         _amount = _totalAsset.toAmount(_shares, false);
     }
 
-    function mint(uint256 _shares, address _receiver) external nonReentrant returns (uint256 _amount) {
+    function mint(
+        uint256 _shares,
+        address _receiver
+    ) external nonReentrant returns (uint256 _amount) {
         if (_receiver == address(0)) revert InvalidReceiver();
 
         // Accrue interest if necessary
@@ -731,7 +750,10 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param _borrowAmount The amount of the Asset Token to borrow
     /// @param _receiver The address to receive the Asset Tokens
     /// @return _sharesAdded The amount of borrow shares the msg.sender will be debited
-    function _borrowAsset(uint128 _borrowAmount, address _receiver) internal returns (uint256 _sharesAdded) {
+    function _borrowAsset(
+        uint128 _borrowAmount,
+        address _receiver
+    ) internal returns (uint256 _sharesAdded) {
         // Get borrow accounting from storage to save gas
         VaultAccount memory _totalBorrow = totalBorrow;
 
@@ -802,7 +824,11 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param _sender The source of funds for the new collateral
     /// @param _collateralAmount The amount of Collateral Token to be transferred
     /// @param _borrower The borrower account for which the collateral should be credited
-    function _addCollateral(address _sender, uint256 _collateralAmount, address _borrower) internal {
+    function _addCollateral(
+        address _sender,
+        uint256 _collateralAmount,
+        address _borrower
+    ) internal {
         // Effects: write to state
         userCollateralBalance[_borrower] += _collateralAmount;
         totalCollateral += _collateralAmount;
@@ -840,7 +866,11 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param _collateralAmount The amount of Collateral Token to remove from the borrower's position
     /// @param _receiver The address to receive the Collateral Token transferred
     /// @param _borrower The borrower whose account will be debited the Collateral amount
-    function _removeCollateral(uint256 _collateralAmount, address _receiver, address _borrower) internal {
+    function _removeCollateral(
+        uint256 _collateralAmount,
+        address _receiver,
+        address _borrower
+    ) internal {
         // Effects: write to state
         // NOTE: Following line will revert on underflow if _collateralAmount > userCollateralBalance
         userCollateralBalance[_borrower] -= _collateralAmount;
@@ -878,7 +908,12 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param borrower The borrower whose account will be credited
     /// @param amountToRepay The amount of Asset token to be transferred
     /// @param shares The amount of Borrow Shares which will be debited from the borrower after repayment
-    event RepayAsset(address indexed payer, address indexed borrower, uint256 amountToRepay, uint256 shares);
+    event RepayAsset(
+        address indexed payer,
+        address indexed borrower,
+        uint256 amountToRepay,
+        uint256 shares
+    );
 
     /// @notice The ```_repayAsset``` function is the internal implementation for repaying a borrow position
     /// @dev The payer must have called ERC20.approve() on the Asset Token contract prior to invocation
@@ -914,7 +949,10 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
     /// @param _shares The number of Borrow Shares which will be repaid by the call
     /// @param _borrower The account for which the debt will be reduced
     /// @return _amountToRepay The amount of Asset Tokens which were transferred in order to repay the Borrow Shares
-    function repayAsset(uint256 _shares, address _borrower) external nonReentrant returns (uint256 _amountToRepay) {
+    function repayAsset(
+        uint256 _shares,
+        address _borrower
+    ) external nonReentrant returns (uint256 _amountToRepay) {
         if (_borrower == address(0)) revert InvalidReceiver();
 
         // Check if repay is paused revert if necessary
@@ -928,7 +966,13 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         _amountToRepay = _totalBorrow.toAmount(_shares, true);
 
         // Execute repayment effects
-        _repayAsset(_totalBorrow, _amountToRepay.toUint128(), _shares.toUint128(), msg.sender, _borrower);
+        _repayAsset(
+            _totalBorrow,
+            _amountToRepay.toUint128(),
+            _shares.toUint128(),
+            msg.sender,
+            _borrower
+        );
     }
 
     // ============================================================================================
@@ -990,8 +1034,10 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         {
             // Checks & Calculations
             // Determine the liquidation amount in collateral units (i.e. how much debt liquidator is going to repay)
-            uint256 _liquidationAmountInCollateralUnits = ((_totalBorrow.toAmount(_sharesToLiquidate, false) *
-                _exchangeRate) / EXCHANGE_PRECISION);
+            uint256 _liquidationAmountInCollateralUnits = ((_totalBorrow.toAmount(
+                _sharesToLiquidate,
+                false
+            ) * _exchangeRate) / EXCHANGE_PRECISION);
 
             // We first optimistically calculate the amount of collateral to give the liquidator based on the higher clean liquidation fee
             // This fee only applies if the liquidator does a full liquidation
@@ -1000,13 +1046,15 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
 
             // Because interest accrues every block, _liquidationAmountInCollateralUnits from a few lines up is an ever increasing value
             // This means that leftoverCollateral can occasionally go negative by a few hundred wei (cleanLiqFee premium covers this for liquidator)
-            _leftoverCollateral = (_userCollateralBalance.toInt256() - _optimisticCollateralForLiquidator.toInt256());
+            _leftoverCollateral = (_userCollateralBalance.toInt256() -
+                _optimisticCollateralForLiquidator.toInt256());
 
             // If cleanLiquidation fee results in no leftover collateral, give liquidator all the collateral
             // This will only be true when there liquidator is cleaning out the position
             _collateralForLiquidator = _leftoverCollateral <= 0
                 ? _userCollateralBalance
-                : (_liquidationAmountInCollateralUnits * (LIQ_PRECISION + dirtyLiquidationFee)) / LIQ_PRECISION;
+                : (_liquidationAmountInCollateralUnits * (LIQ_PRECISION + dirtyLiquidationFee)) /
+                    LIQ_PRECISION;
 
             if (protocolLiquidationFee > 0) {
                 _feesAmount = (protocolLiquidationFee * _collateralForLiquidator) / LIQ_PRECISION;
@@ -1015,7 +1063,8 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
         }
 
         // Calculated here for use during repayment, grouped with other calcs before effects start
-        uint128 _amountLiquidatorToRepay = (_totalBorrow.toAmount(_sharesToLiquidate, true)).toUint128();
+        uint128 _amountLiquidatorToRepay = (_totalBorrow.toAmount(_sharesToLiquidate, true))
+            .toUint128();
 
         // Determine if and how much debt to adjust
         uint128 _sharesToAdjust = 0;
@@ -1242,8 +1291,20 @@ abstract contract HyperlendPairCore is HyperlendPairAccessControl, HyperlendPair
 
         // Effects: write to state
         // Note: setting _payer to address(this) means no actual transfer will occur.  Contract already has funds
-        _repayAsset(_totalBorrow, _amountAssetOut.toUint128(), _sharesToRepay.toUint128(), address(this), msg.sender);
+        _repayAsset(
+            _totalBorrow,
+            _amountAssetOut.toUint128(),
+            _sharesToRepay.toUint128(),
+            address(this),
+            msg.sender
+        );
 
-        emit RepayAssetWithCollateral(msg.sender, _swapperAddress, _collateralToSwap, _amountAssetOut, _sharesToRepay);
+        emit RepayAssetWithCollateral(
+            msg.sender,
+            _swapperAddress,
+            _collateralToSwap,
+            _amountAssetOut,
+            _sharesToRepay
+        );
     }
 }

@@ -8,5 +8,8 @@ interface IRateCalculator {
 
     function getConstants() external pure returns (bytes memory _calldata);
 
-    function getNewRate(bytes calldata _data, bytes calldata _initData) external pure returns (uint64 _newRatePerSec);
+    function getNewRate(
+        bytes calldata _data,
+        bytes calldata _initData
+    ) external pure returns (uint64 _newRatePerSec);
 }

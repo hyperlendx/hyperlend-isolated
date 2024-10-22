@@ -3,13 +3,17 @@ pragma solidity ^0.8.19;
 
 // ==================== HyperlendPairAccessControl =====================
 
-import { Ownable2Step, Ownable } from "@openzeppelin/contracts/access/Ownable2Step.sol";
-import { Timelock2Step } from "./Timelock2Step.sol";
-import { HyperlendPairAccessControlErrors } from "./HyperlendPairAccessControlErrors.sol";
+import {Ownable2Step, Ownable} from '@openzeppelin/contracts/access/Ownable2Step.sol';
+import {Timelock2Step} from './Timelock2Step.sol';
+import {HyperlendPairAccessControlErrors} from './HyperlendPairAccessControlErrors.sol';
 
 /// @title HyperlendPairAccessControl
 /// @notice An abstract contract which contains the access control logic for HyperlendPair
-abstract contract HyperlendPairAccessControl is Timelock2Step, Ownable2Step, HyperlendPairAccessControlErrors {
+abstract contract HyperlendPairAccessControl is
+    Timelock2Step,
+    Ownable2Step,
+    HyperlendPairAccessControlErrors
+{
     // Deployer
     address public immutable DEPLOYER_ADDRESS;
 
@@ -38,10 +42,11 @@ abstract contract HyperlendPairAccessControl is Timelock2Step, Ownable2Step, Hyp
     /// @param _immutables abi.encode(address _circuitBreakerAddress, address _comptrollerAddress, address _timelockAddress)
     constructor(bytes memory _immutables) Timelock2Step() Ownable2Step() {
         // Handle Immutables Configuration
-        (address _circuitBreakerAddress, address _comptrollerAddress, address _timelockAddress) = abi.decode(
-            _immutables,
-            (address, address, address)
-        );
+        (
+            address _circuitBreakerAddress,
+            address _comptrollerAddress,
+            address _timelockAddress
+        ) = abi.decode(_immutables, (address, address, address));
         _setTimelock(_timelockAddress);
         _transferOwnership(_comptrollerAddress);
 

@@ -3,18 +3,18 @@ pragma solidity ^0.8.19;
 
 // ========================== HyperlendPair ============================
 
-import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import { ReentrancyGuard } from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import { SafeCast } from "@openzeppelin/contracts/utils/math/SafeCast.sol";
-import { HyperlendPairConstants } from "./HyperlendPairConstants.sol";
-import { HyperlendPairCore } from "./HyperlendPairCore.sol";
-import { Timelock2Step } from "./Timelock2Step.sol";
-import { SafeERC20 } from "./libraries/SafeERC20.sol";
-import { VaultAccount, VaultAccountingLibrary } from "./libraries/VaultAccount.sol";
-import { IRateCalculatorV2 } from "./interfaces/IRateCalculatorV2.sol";
-import { ISwapper } from "./interfaces/ISwapper.sol";
+import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
+import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import {SafeCast} from '@openzeppelin/contracts/utils/math/SafeCast.sol';
+import {HyperlendPairConstants} from './HyperlendPairConstants.sol';
+import {HyperlendPairCore} from './HyperlendPairCore.sol';
+import {Timelock2Step} from './Timelock2Step.sol';
+import {SafeERC20} from './libraries/SafeERC20.sol';
+import {VaultAccount, VaultAccountingLibrary} from './libraries/VaultAccount.sol';
+import {IRateCalculatorV2} from './interfaces/IRateCalculatorV2.sol';
+import {ISwapper} from './interfaces/ISwapper.sol';
 
 /// @title HyperlendPair
 /// @notice The HyperlendPair is a lending pair that allows users to engage in lending and borrowing activities
@@ -92,7 +92,15 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     /// @return _userCollateralBalance The user collateral balance
     function getUserSnapshot(
         address _address
-    ) external view returns (uint256 _userAssetShares, uint256 _userBorrowShares, uint256 _userCollateralBalance) {
+    )
+        external
+        view
+        returns (
+            uint256 _userAssetShares,
+            uint256 _userBorrowShares,
+            uint256 _userCollateralBalance
+        )
+    {
         _userAssetShares = balanceOf(_address);
         _userBorrowShares = userBorrowShares[_address];
         _userCollateralBalance = userCollateralBalance[_address];
@@ -115,7 +123,14 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
             uint256 _totalCollateral
         )
     {
-        (, , , , VaultAccount memory _totalAsset, VaultAccount memory _totalBorrow) = previewAddInterest();
+        (
+            ,
+            ,
+            ,
+            ,
+            VaultAccount memory _totalAsset,
+            VaultAccount memory _totalBorrow
+        ) = previewAddInterest();
         _totalAssetAmount = _totalAsset.amount;
         _totalAssetShares = _totalAsset.shares;
         _totalBorrowAmount = _totalBorrow.amount;
@@ -219,7 +234,9 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
 
     function maxMint(address _receiver) external view returns (uint256 _maxShares) {
         (, , , , VaultAccount memory _totalAsset, ) = previewAddInterest();
-        uint256 _maxDeposit = _totalAsset.amount >= depositLimit ? 0 : depositLimit - _totalAsset.amount;
+        uint256 _maxDeposit = _totalAsset.amount >= depositLimit
+            ? 0
+            : depositLimit - _totalAsset.amount;
         _maxShares = _totalAsset.toShares(_maxDeposit, false);
     }
 
@@ -234,12 +251,16 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
             VaultAccount memory _totalBorrow
         ) = previewAddInterest();
         // Get the owner balance and include the fees share if owner is this contract
-        uint256 _ownerBalance = _owner == address(this) ? balanceOf(_owner) + _feesShare : balanceOf(_owner);
+        uint256 _ownerBalance = _owner == address(this)
+            ? balanceOf(_owner) + _feesShare
+            : balanceOf(_owner);
 
         // Return the lower of total assets in contract or total assets available to _owner
         uint256 _totalAssetsAvailable = _totalAssetAvailable(_totalAsset, _totalBorrow);
         uint256 _totalUserWithdraw = _totalAsset.toAmount(_ownerBalance, false);
-        _maxAssets = _totalAssetsAvailable < _totalUserWithdraw ? _totalAssetsAvailable : _totalUserWithdraw;
+        _maxAssets = _totalAssetsAvailable < _totalUserWithdraw
+            ? _totalAssetsAvailable
+            : _totalUserWithdraw;
     }
 
     function maxRedeem(address _owner) external view returns (uint256 _maxShares) {
@@ -258,7 +279,9 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         uint256 _totalSharesAvailable = _totalAsset.toShares(_totalAssetsAvailable, false);
 
         // Get the owner balance and include the fees share if owner is this contract
-        uint256 _ownerBalance = _owner == address(this) ? balanceOf(_owner) + _feesShare : balanceOf(_owner);
+        uint256 _ownerBalance = _owner == address(this)
+            ? balanceOf(_owner) + _feesShare
+            : balanceOf(_owner);
         _maxShares = _totalSharesAvailable < _ownerBalance ? _totalSharesAvailable : _ownerBalance;
     }
 
@@ -432,13 +455,21 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     /// @param shares Number of shares (fTokens) redeemed
     /// @param recipient To whom the assets were sent
     /// @param amountToTransfer The amount of fees redeemed
-    event WithdrawFees(uint128 shares, address recipient, uint256 amountToTransfer, uint256 collateralAmount);
+    event WithdrawFees(
+        uint128 shares,
+        address recipient,
+        uint256 amountToTransfer,
+        uint256 collateralAmount
+    );
 
     /// @notice The ```withdrawFees``` function withdraws fees accumulated
     /// @param _shares Number of fTokens to redeem
     /// @param _recipient Address to send the assets
     /// @return _amountToTransfer Amount of assets sent to recipient
-    function withdrawFees(uint128 _shares, address _recipient) external onlyOwner returns (uint256 _amountToTransfer) {
+    function withdrawFees(
+        uint128 _shares,
+        address _recipient
+    ) external onlyOwner returns (uint256 _amountToTransfer) {
         if (_recipient == address(0)) revert InvalidReceiver();
 
         // Grab some data from state to save gas

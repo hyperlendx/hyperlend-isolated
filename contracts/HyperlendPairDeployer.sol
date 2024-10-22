@@ -3,15 +3,15 @@ pragma solidity ^0.8.19;
 
 // ====================== HyperlendPairDeployer ========================
 
-import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
-import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
-import { SSTORE2 } from "@rari-capital/solmate/src/utils/SSTORE2.sol";
-import { BytesLib } from "solidity-bytes-utils/contracts/BytesLib.sol";
-import { IHyperlendWhitelist } from "./interfaces/IHyperlendWhitelist.sol";
-import { IHyperlendPair } from "./interfaces/IHyperlendPair.sol";
-import { IHyperlendPairRegistry } from "./interfaces/IHyperlendPairRegistry.sol";
-import { SafeERC20 } from "./libraries/SafeERC20.sol";
+import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
+import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
+import {SSTORE2} from '@rari-capital/solmate/src/utils/SSTORE2.sol';
+import {BytesLib} from 'solidity-bytes-utils/contracts/BytesLib.sol';
+import {IHyperlendWhitelist} from './interfaces/IHyperlendWhitelist.sol';
+import {IHyperlendPair} from './interfaces/IHyperlendPair.sol';
+import {IHyperlendPairRegistry} from './interfaces/IHyperlendPairRegistry.sol';
+import {SafeERC20} from './libraries/SafeERC20.sol';
 
 // solhint-disable no-inline-assembly
 
@@ -100,20 +100,20 @@ contract HyperlendPairDeployer is Ownable {
     ) public view returns (string memory _name, string memory _symbol) {
         _name = string(
             abi.encodePacked(
-                "Hyperlend Interest Bearing ",
+                'Hyperlend Interest Bearing ',
                 IERC20(_asset).safeSymbol(),
-                " (",
+                ' (',
                 IERC20(_collateral).safeName(),
-                ")"
+                ')'
             )
         );
         _symbol = string(
             abi.encodePacked(
-                "h",
+                'h',
                 IERC20(_asset).safeSymbol(),
-                "(",
+                '(',
                 IERC20(_collateral).safeSymbol(),
-                ")"
+                ')'
             )
         );
     }
@@ -129,7 +129,11 @@ contract HyperlendPairDeployer is Ownable {
         bytes memory _firstHalf = BytesLib.slice(_creationCode, 0, 13_000);
         contractAddress1 = SSTORE2.write(_firstHalf);
         if (_creationCode.length > 13_000) {
-            bytes memory _secondHalf = BytesLib.slice(_creationCode, 13_000, _creationCode.length - 13_000);
+            bytes memory _secondHalf = BytesLib.slice(
+                _creationCode,
+                13_000,
+                _creationCode.length - 13_000
+            );
             contractAddress2 = SSTORE2.write(_secondHalf);
         }
     }
@@ -215,7 +219,10 @@ contract HyperlendPairDeployer is Ownable {
         bytes memory _customConfigData
     ) private returns (address _pairAddress) {
         // Get creation code
-        bytes memory _creationCode = BytesLib.concat(SSTORE2.read(contractAddress1), SSTORE2.read(contractAddress2));
+        bytes memory _creationCode = BytesLib.concat(
+            SSTORE2.read(contractAddress1),
+            SSTORE2.read(contractAddress2)
+        );
 
         // Get bytecode
         bytes memory bytecode = abi.encodePacked(
@@ -252,7 +259,9 @@ contract HyperlendPairDeployer is Ownable {
     /// @param _configData abi.encode(address _asset, address _collateral, address _oracle, uint32 _maxOracleDeviation, address _rateContract, uint64 _fullUtilizationRate, uint256 _maxLTV, uint256 _cleanLiquidationFee, uint256 _dirtyLiquidationFee, uint256 _protocolLiquidationFee)
     /// @return _pairAddress The address to which the Pair was deployed
     function deploy(bytes memory _configData) external returns (address _pairAddress) {
-        if (!IHyperlendWhitelist(hyperlendWhitelistAddress).hyperlendDeployerWhitelist(msg.sender)) {
+        if (
+            !IHyperlendWhitelist(hyperlendWhitelistAddress).hyperlendDeployerWhitelist(msg.sender)
+        ) {
             revert WhitelistedDeployersOnly();
         }
 
@@ -263,14 +272,26 @@ contract HyperlendPairDeployer is Ownable {
 
         (string memory _name, string memory _symbol) = getNextNameSymbol(_asset, _collateral);
 
-        bytes memory _immutables = abi.encode(circuitBreakerAddress, comptrollerAddress, timelockAddress);
+        bytes memory _immutables = abi.encode(
+            circuitBreakerAddress,
+            comptrollerAddress,
+            timelockAddress
+        );
         bytes memory _customConfigData = abi.encode(_name, _symbol, IERC20(_asset).safeDecimals());
 
         _pairAddress = _deploy(_configData, _immutables, _customConfigData);
 
         IHyperlendPairRegistry(hyperlendPairRegistryAddress).addPair(_pairAddress);
 
-        emit LogDeploy(_pairAddress, _asset, _collateral, _name, _configData, _immutables, _customConfigData);
+        emit LogDeploy(
+            _pairAddress,
+            _asset,
+            _collateral,
+            _name,
+            _configData,
+            _immutables,
+            _customConfigData
+        );
     }
 
     // ============================================================================================
@@ -281,7 +302,9 @@ contract HyperlendPairDeployer is Ownable {
     /// @dev Ignores reverts when calling pause()
     /// @param _addresses Addresses to attempt to pause()
     /// @return _updatedAddresses Addresses for which pause() was successful
-    function globalPause(address[] memory _addresses) external returns (address[] memory _updatedAddresses) {
+    function globalPause(
+        address[] memory _addresses
+    ) external returns (address[] memory _updatedAddresses) {
         if (msg.sender != circuitBreakerAddress) revert CircuitBreakerOnly();
 
         address _pairAddress;

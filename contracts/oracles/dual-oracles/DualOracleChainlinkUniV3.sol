@@ -3,10 +3,10 @@ pragma solidity ^0.8.19;
 
 // ==================== DualOracleChainlinkUniV3 ======================
 
-import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-import { IStaticOracle } from "@mean-finance/uniswap-v3-oracle/solidity/interfaces/IStaticOracle.sol";
-import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import { Timelock2Step } from "../../Timelock2Step.sol";
+import {AggregatorV3Interface} from '@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol';
+import {IStaticOracle} from '@mean-finance/uniswap-v3-oracle/solidity/interfaces/IStaticOracle.sol';
+import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
+import {Timelock2Step} from '../../Timelock2Step.sol';
 
 /// @title DualOracleChainlinkUniV3
 /// @notice  An oracle for combining Chainlink & UniV3 Twap prices
@@ -47,7 +47,7 @@ contract DualOracleChainlinkUniV3 is Timelock2Step {
         address _timelockAddress,
         string memory _name
     ) Timelock2Step() {
-        _setTimelock({ _newTimelock: _timelockAddress });
+        _setTimelock({_newTimelock: _timelockAddress});
 
         BASE_TOKEN = _baseToken;
         QUOTE_TOKEN = _quoteToken;
@@ -70,7 +70,7 @@ contract DualOracleChainlinkUniV3 is Timelock2Step {
         maxOracleDelay = _maxOracleDelay;
 
         UNI_V3_PAIR_ADDRESS = _uniV3PairAddress;
-        if (_twapDuration == 0) revert("DURATION == 0");
+        if (_twapDuration == 0) revert('DURATION == 0');
         TWAP_DURATION = _twapDuration;
 
         name = _name;
@@ -89,8 +89,9 @@ contract DualOracleChainlinkUniV3 is Timelock2Step {
         _price = uint256(1e36);
 
         if (CHAINLINK_MULTIPLY_ADDRESS != address(0)) {
-            (, int256 _answer, , uint256 _updatedAt, ) = AggregatorV3Interface(CHAINLINK_MULTIPLY_ADDRESS)
-                .latestRoundData();
+            (, int256 _answer, , uint256 _updatedAt, ) = AggregatorV3Interface(
+                CHAINLINK_MULTIPLY_ADDRESS
+            ).latestRoundData();
 
             // If data is stale or negative, set bad data to true and return
             if (_answer <= 0 || (block.timestamp - _updatedAt > maxOracleDelay)) {
@@ -101,8 +102,9 @@ contract DualOracleChainlinkUniV3 is Timelock2Step {
         }
 
         if (CHAINLINK_DIVIDE_ADDRESS != address(0)) {
-            (, int256 _answer, , uint256 _updatedAt, ) = AggregatorV3Interface(CHAINLINK_DIVIDE_ADDRESS)
-                .latestRoundData();
+            (, int256 _answer, , uint256 _updatedAt, ) = AggregatorV3Interface(
+                CHAINLINK_DIVIDE_ADDRESS
+            ).latestRoundData();
 
             // If data is stale or negative, set bad data to true and return
             if (_answer <= 0 || (block.timestamp - _updatedAt > maxOracleDelay)) {
@@ -121,16 +123,21 @@ contract DualOracleChainlinkUniV3 is Timelock2Step {
     /// @return _isBadData is true when chainlink data is stale or negative
     /// @return _priceLow is the lower of the two prices
     /// @return _priceHigh is the higher of the two prices
-    function getPrices() external view returns (bool _isBadData, uint256 _priceLow, uint256 _priceHigh) {
+    function getPrices()
+        external
+        view
+        returns (bool _isBadData, uint256 _priceLow, uint256 _priceHigh)
+    {
         address[] memory _pools = new address[](1);
         _pools[0] = UNI_V3_PAIR_ADDRESS;
-        uint256 _price1 = IStaticOracle(0xB210CE856631EeEB767eFa666EC7C1C57738d438).quoteSpecificPoolsWithTimePeriod(
-            ORACLE_PRECISION,
-            BASE_TOKEN,
-            QUOTE_TOKEN,
-            _pools,
-            TWAP_DURATION
-        );
+        uint256 _price1 = IStaticOracle(0xB210CE856631EeEB767eFa666EC7C1C57738d438)
+            .quoteSpecificPoolsWithTimePeriod(
+                ORACLE_PRECISION,
+                BASE_TOKEN,
+                QUOTE_TOKEN,
+                _pools,
+                TWAP_DURATION
+            );
         uint256 _price2;
         (_isBadData, _price2) = _getChainlinkPrice();
 
