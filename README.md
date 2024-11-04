@@ -1,8 +1,8 @@
-# HyperLend Isolated pools
+# HyperLend Isolated
 
 <br>
 
-### Introduction to HyperLend Isolated pools
+### Introduction to HyperLend Isolated
 
 HyperLend Isolated is a lending platform (fork of [FraxLend](https://docs.frax.finance/fraxlend/fraxlend-overview) V3) that allows users to create an isolated market between a pair of ERC-20 tokens. 
 
