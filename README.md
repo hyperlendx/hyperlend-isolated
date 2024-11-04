@@ -1,12 +1,12 @@
-# HyperLend
+# HyperLend Isolated pools
 
 <br>
 
-### Introduction to HyperLend
+### Introduction to HyperLend Isolated pools
 
-HyperLend is a lending platform (fork of [FraxLend](https://docs.frax.finance/fraxlend/fraxlend-overview) V3) that allows users to create an isolated market between a pair of ERC-20 tokens. 
+HyperLend Isolated is a lending platform (fork of [FraxLend](https://docs.frax.finance/fraxlend/fraxlend-overview) V3) that allows users to create an isolated market between a pair of ERC-20 tokens. 
 
-HyperLend adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to deposit ERC-20 assets into the pair and receive yield-bearing hTokens.  
+HyperLend Isolated adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to deposit ERC-20 assets into the pair and receive yield-bearing hTokens.  
 
 ***[Documentation](https://docs.hyperlend.finance/)***
 
@@ -15,18 +15,20 @@ HyperLend adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to
 ![pairOverview](./documentation/images/pairOverview.jpg)
 
 <br>
-<br>
 
 ### Building and Testing
 
-- First copy `.env.example` to `.env` and fill in the mnemonic
-- To download needed modules run `npm install`
+- Copy `.env.example` to `.env` and fill in the mnemonic
+- Run `npm install`
 
 Compilation
 
 - `npx hardhat compile`
 
-<br>
+Tests
+
+- `npx hardhat test`
+
 <br>
 
 ### License
