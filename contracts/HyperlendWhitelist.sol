@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ======================= HyperlendWhitelist ==========================
-
 import {Ownable2Step} from '@openzeppelin/contracts/access/Ownable2Step.sol';
 
 contract HyperlendWhitelist is Ownable2Step {

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ==================== HyperlendPairAccessControl =====================
-
 import {Ownable2Step, Ownable} from '@openzeppelin/contracts/access/Ownable2Step.sol';
 import {Timelock2Step} from './Timelock2Step.sol';
 import {HyperlendPairAccessControlErrors} from './HyperlendPairAccessControlErrors.sol';

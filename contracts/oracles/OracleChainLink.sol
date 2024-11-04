@@ -9,7 +9,7 @@ import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IER
 import {Timelock2Step} from '../Timelock2Step.sol';
 
 /// @title OracleChainLink
-/// @notice  An oracle using Chainlink prices
+/// @notice An oracle using Chainlink prices
 contract OracleChainLink is Timelock2Step {
     uint128 public constant ORACLE_PRECISION = 1e18;
     address public immutable BASE_TOKEN;

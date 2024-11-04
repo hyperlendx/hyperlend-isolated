@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ====================== HyperlendPairRegistry ========================
-
 import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import {Ownable2Step} from '@openzeppelin/contracts/access/Ownable2Step.sol';
 

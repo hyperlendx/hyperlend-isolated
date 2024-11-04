@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ========================= HyperlendPairCore =========================
-
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
@@ -473,7 +471,6 @@ abstract contract HyperlendPairCore is
     /// @return _isBorrowAllowed True if deviation is within bounds
     /// @return _lowExchangeRate The low exchange rate
     /// @return _highExchangeRate The high exchange rate
-
     function _updateExchangeRate()
         internal
         returns (bool _isBorrowAllowed, uint256 _lowExchangeRate, uint256 _highExchangeRate)
@@ -518,17 +515,17 @@ abstract contract HyperlendPairCore is
 
     /// @notice The ```Deposit``` event fires when a user deposits assets to the pair
     /// @param caller the msg.sender
-    /// @param owner the account the fTokens are sent to
+    /// @param owner the account the hTokens are sent to
     /// @param assets the amount of assets deposited
-    /// @param shares the number of fTokens minted
+    /// @param shares the number of hTokens minted
     event Deposit(address indexed caller, address indexed owner, uint256 assets, uint256 shares);
 
     /// @notice The ```_deposit``` function is the internal implementation for lending assets
     /// @dev Caller must invoke ```ERC20.approve``` on the Asset Token contract prior to calling function
     /// @param _totalAsset An in memory VaultAccount struct representing the total amounts and shares for the Asset Token
     /// @param _amount The amount of Asset Token to be transferred
-    /// @param _shares The amount of Asset Shares (fTokens) to be minted
-    /// @param _receiver The address to receive the Asset Shares (fTokens)
+    /// @param _shares The amount of Asset Shares (hTokens) to be minted
+    /// @param _receiver The address to receive the Asset Shares (hTokens)
     function _deposit(
         VaultAccount memory _totalAsset,
         uint128 _amount,
@@ -556,8 +553,8 @@ abstract contract HyperlendPairCore is
     /// @notice The ```deposit``` function allows a user to Lend Assets by specifying the amount of Asset Tokens to lend
     /// @dev Caller must invoke ```ERC20.approve``` on the Asset Token contract prior to calling function
     /// @param _amount The amount of Asset Token to transfer to Pair
-    /// @param _receiver The address to receive the Asset Shares (fTokens)
-    /// @return _sharesReceived The number of fTokens received for the deposit
+    /// @param _receiver The address to receive the Asset Shares (hTokens)
+    /// @return _sharesReceived The number of hTokens received for the deposit
     function deposit(
         uint256 _amount,
         address _receiver
@@ -573,7 +570,7 @@ abstract contract HyperlendPairCore is
         // Check if this deposit will violate the deposit limit
         if (depositLimit < _totalAsset.amount + _amount) revert ExceedsDepositLimit();
 
-        // Calculate the number of fTokens to mint
+        // Calculate the number of hTokens to mint
         _sharesReceived = _totalAsset.toShares(_amount, false);
 
         // Execute the deposit effects
@@ -607,12 +604,12 @@ abstract contract HyperlendPairCore is
         _deposit(_totalAsset, _amount.toUint128(), _shares.toUint128(), _receiver);
     }
 
-    /// @notice The ```Withdraw``` event fires when a user redeems their fTokens for the underlying asset
+    /// @notice The ```Withdraw``` event fires when a user redeems their hTokens for the underlying asset
     /// @param caller the msg.sender
     /// @param receiver The address to which the underlying asset will be transferred to
-    /// @param owner The owner of the fTokens
+    /// @param owner The owner of the hTokens
     /// @param assets The assets transferred
-    /// @param shares The number of fTokens burned
+    /// @param shares The number of hTokens burned
     event Withdraw(
         address indexed caller,
         address indexed receiver,
@@ -623,11 +620,11 @@ abstract contract HyperlendPairCore is
 
     /// @notice The ```_redeem``` function is an internal implementation which allows a Lender to pull their Asset Tokens out of the Pair
     /// @dev Caller must invoke ```ERC20.approve``` on the Asset Token contract prior to calling function
-    /// @param _totalAsset An in-memory VaultAccount struct which holds the total amount of Asset Tokens and the total number of Asset Shares (fTokens)
+    /// @param _totalAsset An in-memory VaultAccount struct which holds the total amount of Asset Tokens and the total number of Asset Shares (hTokens)
     /// @param _amountToReturn The number of Asset Tokens to return
-    /// @param _shares The number of Asset Shares (fTokens) to burn
+    /// @param _shares The number of Asset Shares (hTokens) to burn
     /// @param _receiver The address to which the Asset Tokens will be transferred
-    /// @param _owner The owner of the Asset Shares (fTokens)
+    /// @param _owner The owner of the Asset Shares (hTokens)
     function _redeem(
         VaultAccount memory _totalAsset,
         uint128 _amountToReturn,
@@ -667,9 +664,9 @@ abstract contract HyperlendPairCore is
     }
 
     /// @notice The ```redeem``` function allows the caller to redeem their Asset Shares for Asset Tokens
-    /// @param _shares The number of Asset Shares (fTokens) to burn for Asset Tokens
+    /// @param _shares The number of Asset Shares (hTokens) to burn for Asset Tokens
     /// @param _receiver The address to which the Asset Tokens will be transferred
-    /// @param _owner The owner of the Asset Shares (fTokens)
+    /// @param _owner The owner of the Asset Shares (hTokens)
     /// @return _amountToReturn The amount of Asset Tokens to be transferred
     function redeem(
         uint256 _shares,
@@ -694,7 +691,7 @@ abstract contract HyperlendPairCore is
         _redeem(_totalAsset, _amountToReturn.toUint128(), _shares.toUint128(), _receiver, _owner);
     }
 
-    /// @notice The ```previewWithdraw``` function returns the number of Asset Shares (fTokens) that would be burned for a given amount of Asset Tokens
+    /// @notice The ```previewWithdraw``` function returns the number of Asset Shares (hTokens) that would be burned for a given amount of Asset Tokens
     /// @param _amount The amount of Asset Tokens to be withdrawn
     /// @return _sharesToBurn The number of shares that would be burned
     function previewWithdraw(uint256 _amount) external view returns (uint256 _sharesToBurn) {
@@ -702,11 +699,11 @@ abstract contract HyperlendPairCore is
         _sharesToBurn = _totalAsset.toShares(_amount, true);
     }
 
-    /// @notice The ```withdraw``` function allows the caller to withdraw their Asset Tokens for a given amount of fTokens
+    /// @notice The ```withdraw``` function allows the caller to withdraw their Asset Tokens for a given amount of hTokens
     /// @param _amount The amount to withdraw
     /// @param _receiver The address to which the Asset Tokens will be transferred
-    /// @param _owner The owner of the Asset Shares (fTokens)
-    /// @return _sharesToBurn The number of shares (fTokens) that were burned
+    /// @param _owner The owner of the Asset Shares (hTokens)
+    /// @return _sharesToBurn The number of shares (hTokens) that were burned
     function withdraw(
         uint256 _amount,
         address _receiver,
@@ -978,6 +975,7 @@ abstract contract HyperlendPairCore is
     // ============================================================================================
     // Functions: Liquidations
     // ============================================================================================
+    
     /// @notice The ```Liquidate``` event is emitted when a liquidation occurs
     /// @param _borrower The borrower account for which the liquidation occurred
     /// @param _collateralForLiquidator The amount of Collateral Token transferred to the liquidator

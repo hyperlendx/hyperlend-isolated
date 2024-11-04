@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ====================== HyperlendPairDeployer ========================
-
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
@@ -124,6 +122,7 @@ contract HyperlendPairDeployer is Ownable {
 
     /// @notice The ```setCreationCode``` function sets the bytecode for the hyperlendPair
     /// @dev splits the data if necessary to accommodate creation code that is slightly larger than 24kb
+    /// @dev creation code must always be larger than 13kb, otherwise it will revert
     /// @param _creationCode The creationCode for the Hyperlend Pair
     function setCreationCode(bytes calldata _creationCode) external onlyOwner {
         bytes memory _firstHalf = BytesLib.slice(_creationCode, 0, 13_000);

@@ -4,7 +4,7 @@
 
 ### Introduction to HyperLend
 
-HyperLend is a lending platform (based on [FraxLend](https://docs.frax.finance/fraxlend/fraxlend-overview)) that allows users to create an isolated market between a pair of ERC-20 tokens. 
+HyperLend is a lending platform (fork of [FraxLend](https://docs.frax.finance/fraxlend/fraxlend-overview) V3) that allows users to create an isolated market between a pair of ERC-20 tokens. 
 
 HyperLend adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to deposit ERC-20 assets into the pair and receive yield-bearing hTokens.  
 

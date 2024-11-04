@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ================ HyperlendPairAccessControlErrors ===================
-
 /// @title HyperlendPairAccessControlErrors
 /// @notice An abstract contract which contains the errors for the Access Control contract
 abstract contract HyperlendPairAccessControlErrors {

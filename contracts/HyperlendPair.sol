@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ========================== HyperlendPair ============================
-
 import {ERC20} from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
@@ -48,7 +46,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         return decimalsOfContract;
     }
 
-    // totalSupply for fToken ERC20 compatibility
+    // totalSupply for hToken ERC20 compatibility
     function totalSupply() public view override(ERC20, IERC20) returns (uint256) {
         return totalAsset.shares;
     }
@@ -87,7 +85,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
 
     /// @notice The ```getUserSnapshot``` function gets user level accounting data
     /// @param _address The user address
-    /// @return _userAssetShares The user fToken balance
+    /// @return _userAssetShares The user hToken balance
     /// @return _userBorrowShares The user borrow shares
     /// @return _userCollateralBalance The user collateral balance
     function getUserSnapshot(
@@ -108,7 +106,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
 
     /// @notice The ```getPairAccounting``` function gets all pair level accounting numbers
     /// @return _totalAssetAmount Total assets deposited and interest accrued, total claims
-    /// @return _totalAssetShares Total fTokens
+    /// @return _totalAssetShares Total hTokens
     /// @return _totalBorrowAmount Total borrows
     /// @return _totalBorrowShares Total borrow shares
     /// @return _totalCollateral Total collateral
@@ -175,7 +173,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     }
 
     /// @notice The ```toAssetAmount``` function converts a given number of shares to an asset amount
-    /// @param _shares Shares of asset (fToken)
+    /// @param _shares Shares of asset (hToken)
     /// @param _roundUp Whether to round up after division
     /// @param _previewInterest Whether to preview interest accrual before calculation
     /// @return _amount The amount of asset
@@ -192,11 +190,11 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         }
     }
 
-    /// @notice The ```toAssetShares``` function converts a given asset amount to a number of asset shares (fTokens)
+    /// @notice The ```toAssetShares``` function converts a given asset amount to a number of asset shares (hTokens)
     /// @param _amount The amount of asset
     /// @param _roundUp Whether to round up after division
     /// @param _previewInterest Whether to preview interest accrual before calculation
-    /// @return _shares The number of shares (fTokens)
+    /// @return _shares The number of shares (hTokens)
     function toAssetShares(
         uint256 _amount,
         bool _roundUp,
@@ -452,7 +450,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     }
 
     /// @notice The ```WithdrawFees``` event fires when the fees are withdrawn
-    /// @param shares Number of shares (fTokens) redeemed
+    /// @param shares Number of shares (hTokens) redeemed
     /// @param recipient To whom the assets were sent
     /// @param amountToTransfer The amount of fees redeemed
     event WithdrawFees(
@@ -463,7 +461,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     );
 
     /// @notice The ```withdrawFees``` function withdraws fees accumulated
-    /// @param _shares Number of fTokens to redeem
+    /// @param _shares Number of hTokens to redeem
     /// @param _recipient Address to send the assets
     /// @return _amountToTransfer Amount of assets sent to recipient
     function withdrawFees(
@@ -494,7 +492,6 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     event SetSwapper(address swapper, bool approval);
 
     /// @notice The ```setSwapper``` function is called to black or whitelist a given swapper address
-    /// @dev
     /// @param _swapper The swapper address
     /// @param _approval The approval
     function setSwapper(address _swapper, bool _approval) external onlyOwner {
