@@ -6,9 +6,9 @@ import {IStaticOracle} from '@mean-finance/uniswap-v3-oracle/solidity/interfaces
 import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import {Timelock2Step} from '../Timelock2Step.sol';
 
-/// @title OracleChainLink
+/// @title OracleChainlink
 /// @notice An oracle using a single Chainlink price feed
-contract OracleChainLink is Timelock2Step {
+contract OracleChainlink is Timelock2Step {
     uint128 public constant ORACLE_PRECISION = 1e18;
     address public immutable BASE_TOKEN;
     address public immutable QUOTE_TOKEN;

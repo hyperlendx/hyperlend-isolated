@@ -9,7 +9,7 @@ async function main({
     timelockAddress,
     name
 }) {
-    const Oracle = await ethers.getContractFactory("OracleChainLink");
+    const Oracle = await ethers.getContractFactory("OracleChainlink");
     const oracle = await Oracle.deploy(
         baseToken,
         quoteToken,

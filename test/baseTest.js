@@ -100,15 +100,15 @@ describe("BaseTest", function () {
 
         //repay borrowed assets
         await pair.connect(data.lender).repayAsset(ethers.parseUnits("0.01", 18), data.lender.address)
-        expect(await pair.userBorrowShares(data.lender.address)).to.equal("0")
+        expect(await pair.userBorrowShares(data.lender.address)).to.equal(ethers.parseUnits("0", 18))
 
         //withdraw collateral
         await pair.connect(data.lender).removeCollateral(ethers.parseUnits("100", 6), data.lender.address)
-        expect(await pair.userCollateralBalance(data.lender.address)).to.equal("0")
+        expect(await pair.userCollateralBalance(data.lender.address)).to.equal(ethers.parseUnits("0", 6))
 
         //redeem asset shares
         await pair.connect(data.lender).redeem((await pair.balanceOf(data.lender.address)), data.lender.address, data.lender.address)
-        expect(await pair.balanceOf(data.lender.address)).to.equal("0")
+        expect(await pair.balanceOf(data.lender.address)).to.equal(ethers.parseUnits("0", 18))
 
         expect(await data.mockTokens.USDC.balanceOf(data.lender.address)).to.equal(ethers.parseUnits("100", 6))
         expect(await data.mockTokens.WETH.balanceOf(data.lender.address)).to.equal(ethers.parseUnits("10", 18))
