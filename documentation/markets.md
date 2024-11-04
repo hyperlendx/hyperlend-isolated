@@ -1,7 +1,0 @@
-### Deployed markets
-
----
-
-#### Arbitrum
-
-Isolated:

@@ -15,4 +15,4 @@ artifacts
 # typechain
 typechain
 
-deploy/deployments
+scripts/deployments

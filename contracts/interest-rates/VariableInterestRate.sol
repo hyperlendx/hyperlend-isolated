@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ====================== VariableInterestRate ========================
-
 import {Strings} from '@openzeppelin/contracts/utils/Strings.sol';
 import {IRateCalculatorV2} from '../interfaces/IRateCalculatorV2.sol';
 

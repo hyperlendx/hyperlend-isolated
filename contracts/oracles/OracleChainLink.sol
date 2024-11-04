@@ -1,15 +1,13 @@
 // SPDX-License-Identifier: ISC
 pragma solidity ^0.8.19;
 
-// ==================== OracleChainLink ======================
-
 import {AggregatorV3Interface} from '@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol';
 import {IStaticOracle} from '@mean-finance/uniswap-v3-oracle/solidity/interfaces/IStaticOracle.sol';
 import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import {Timelock2Step} from '../Timelock2Step.sol';
 
 /// @title OracleChainLink
-/// @notice An oracle using Chainlink prices
+/// @notice An oracle using a single Chainlink price feed
 contract OracleChainLink is Timelock2Step {
     uint128 public constant ORACLE_PRECISION = 1e18;
     address public immutable BASE_TOKEN;

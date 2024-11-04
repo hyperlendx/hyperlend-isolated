@@ -21,7 +21,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
     using SafeERC20 for IERC20;
     using SafeCast for uint256;
 
-    /// @param _configData abi.encode(address _asset, address _collateral, address _oracle, uint32 _maxOracleDeviation, address _rateContract, uint64 _fullUtilizationRate, uint256 _maxLTV, uint256 _cleanLiquidationFee, uint256 _dirtyLiquidationFee, uint256 _protocolLiquidationFee)
+    /// @param _configData abi.encode(address _asset, address _collateral, address _oracle, uint32 _maxOracleDeviation, address _rateContract, uint64 _fullUtilizationRate, uint256 _maxLTV, uint256 _cleanLiquidationFee, uint256 _protocolLiquidationFee)
     /// @param _immutables abi.encode(address _circuitBreakerAddress, address _comptrollerAddress, address _timelockAddress)
     /// @param _customConfigData abi.encode(string memory _nameOfContract, string memory _symbolOfContract, uint8 _decimalsOfContract)
     constructor(
@@ -225,12 +225,12 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         return _totalAsset.amount;
     }
 
-    function maxDeposit(address _receiver) public view returns (uint256 _maxAssets) {
+    function maxDeposit() public view returns (uint256 _maxAssets) {
         (, , , , VaultAccount memory _totalAsset, ) = previewAddInterest();
         _maxAssets = _totalAsset.amount >= depositLimit ? 0 : depositLimit - _totalAsset.amount;
     }
 
-    function maxMint(address _receiver) external view returns (uint256 _maxShares) {
+    function maxMint() external view returns (uint256 _maxShares) {
         (, , , , VaultAccount memory _totalAsset, ) = previewAddInterest();
         uint256 _maxDeposit = _totalAsset.amount >= depositLimit
             ? 0

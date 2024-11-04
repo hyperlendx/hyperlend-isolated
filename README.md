@@ -19,15 +19,11 @@ HyperLend adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to
 
 ### Building and Testing
 
-- First copy `.env.example` to `.env` and fill in archival node URLs as well as a mnemonic (hardhat only)
+- First copy `.env.example` to `.env` and fill in the mnemonic
 - To download needed modules run `npm install`
-- This repository contains scripts to compile using both Hardhat and Foundry
-- You will need to [install foundry](https://book.getfoundry.sh/getting-started/installation)
-- Install foundry submodules `git submodule init && git submodule update`
 
 Compilation
 
-- `forge build`
 - `npx hardhat compile`
 
 <br>
