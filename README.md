@@ -8,8 +8,6 @@ HyperLend Isolated is a lending platform (fork of [FraxLend](https://docs.frax.f
 
 HyperLend Isolated adheres to the EIP-4626: Tokenized Vault Standard, lenders are able to deposit ERC-20 assets into the pair and receive yield-bearing hTokens.  
 
-***[Documentation](https://docs.hyperlend.finance/)***
-
 ## Overview
 
 ![pairOverview](./documentation/images/pairOverview.jpg)

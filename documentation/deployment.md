@@ -27,7 +27,7 @@ Governance config:
 
 Total signers: 10
 
-- MarketDeployer: Ledger cold wallet
+- MarketDeployer: hardware cold wallet
 - CircuitBreaker: GnosisSafe, 1 signer required
 - Timelock owner: GnosisSafe Governance, 4 signers required
 - Comptroller: GnosisSafe Governance, 4 signers required
@@ -38,21 +38,17 @@ Total signers: 10
 
 #### Core deployment
 
-Deploy HyperlendWhitelist and set owner to COMPTROLLER_ADDRESS. Only whitelisted deployers can create new markets.
-Deploy HyperlendPairRegistry with owner and initialDeployers set to COMPTROLLER_ADDRESS, add marketDeployer wallet as initialDeployers too.
-
-Deploy HyperlendPairDeployer contract. 
-
-Set HyperlendPairDeployer address as deployer in HyperlendPairRegistry.
+- Deploy HyperlendWhitelist and set owner to COMPTROLLER_ADDRESS. Only whitelisted deployers can create new markets.
+- Deploy HyperlendPairRegistry with owner and initialDeployers set to COMPTROLLER_ADDRESS, add marketDeployer wallet as initialDeployers too.
+- Deploy HyperlendPairDeployer contract. 
+- Set HyperlendPairDeployer address as deployer in HyperlendPairRegistry.
 
 ---
 
 #### Market deployment
 
-Deploy rate contracts, LinearInterestRate.sol and VariableInterestRate.sol
-
-Deploy oracle contract (or use existing oracle).
-
-Call HyperlendPairDeployer.deploy()
+- Deploy rate contracts, LinearInterestRate.sol and VariableInterestRate.sol
+- Deploy oracle contract (or use existing oracle).
+- Call HyperlendPairDeployer.deploy()
 
 
