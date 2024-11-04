@@ -5,7 +5,7 @@ const path = require("path")
 async function main() {
     const [deployer, admin, borrower, lender] = await hre.ethers.getSigners();
 
-    console.log(`-------- core contracts deployment started --------`)
+    // console.log(`-------- core contracts deployment started --------`)
 
     const Timelock = await ethers.getContractFactory("Timelock");
     const timelock = await Timelock.deploy(admin.address, 60 * 60 * 24 * 2)
