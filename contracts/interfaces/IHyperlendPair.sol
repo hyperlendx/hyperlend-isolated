@@ -63,7 +63,13 @@ interface IHyperlendPair {
 
     function dirtyLiquidationFee() external view returns (uint256);
 
-    function exchangeRateInfo() external view returns (uint32 lastTimestamp, uint224 exchangeRate);
+    function exchangeRateInfo() external view returns (
+        address oracle,
+        uint32 maxOracleDeviation,
+        uint184 lastTimestampExchRate,
+        uint256 lowExchangeRate,
+        uint256 highExchangeRate
+    );
 
     function getConstants()
         external

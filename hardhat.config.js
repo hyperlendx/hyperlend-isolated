@@ -13,6 +13,13 @@ module.exports = {
             },
             chainId: 1337,
         },
+        hyperEvmTestnet: {
+            accounts: {
+                mnemonic,
+            },
+            chainId: 998,
+            url: 'https://api.hyperliquid-testnet.xyz/evm',
+        }
     },
     paths: {
         artifacts: "./artifacts",
