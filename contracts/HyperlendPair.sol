@@ -225,12 +225,12 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         return _totalAsset.amount;
     }
 
-    function maxDeposit() public view returns (uint256 _maxAssets) {
+    function maxDeposit(address) public view returns (uint256 _maxAssets) {
         (, , , , VaultAccount memory _totalAsset, ) = previewAddInterest();
         _maxAssets = _totalAsset.amount >= depositLimit ? 0 : depositLimit - _totalAsset.amount;
     }
 
-    function maxMint() external view returns (uint256 _maxShares) {
+    function maxMint(address) external view returns (uint256 _maxShares) {
         (, , , , VaultAccount memory _totalAsset, ) = previewAddInterest();
         uint256 _maxDeposit = _totalAsset.amount >= depositLimit
             ? 0
