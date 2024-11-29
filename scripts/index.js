@@ -9,7 +9,7 @@ async function main(){
     console.log(await deployCoreScript.main())
 
     const oracleConfig = {
-        baseToken: "0x4D6b8f9518b0b92080b5eAAf80bD505734A059Ae", //asset TESTJ
+        baseToken: "0x4D6b8f9518b0b92080b5eAAf80bD505734A059Ae", //asset TESTH
         quoteToken: "0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7", //collateral
         chainlinkMultiplyAddress: '0x713c630Cbb3A37b45bA3921125abb3D0D4F4d8ef', //TESTH provider
         chainlinkDivideAddress: '0xdF6CeC37cF3EB6c69146A0787f8488B94ef3c22E', //WETH provider

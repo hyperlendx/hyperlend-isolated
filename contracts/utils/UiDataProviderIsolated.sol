@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import { IHyperlendPair } from '../interfaces/IHyperlendPair.sol';
+import { OracleChainlink } from '../oracles/OracleChainlink.sol';
 
 contract UiDataProviderIsolated {
     struct InterestRateInfo {
@@ -17,6 +19,8 @@ contract UiDataProviderIsolated {
         uint184 lastTimestamp;
         uint256 lowExchangeRate;
         uint256 highExchangeRate;
+        address chainlinkAssetAddress;
+        address chainlinkCollateralAddress;
     }
     struct PairData {
         address pair;
@@ -31,6 +35,7 @@ contract UiDataProviderIsolated {
         string symbol;
         InterestRateInfo interestRate;
         ExchangeRateInfo exchangeRate;
+        uint256 availableLiquidity;
     }
 
     function getPairData(address _pair) external view returns (PairData memory pairData) {
@@ -52,6 +57,10 @@ contract UiDataProviderIsolated {
             uint256 lowExchangeRate,
             uint256 highExchangeRate
         ) = pair.exchangeRateInfo();
+
+        OracleChainlink oracleChainlink = OracleChainlink(oracle);
+
+        uint256 availableLiquidity = totalAssetAmount - ERC20(pair.asset()).balanceOf(_pair);
 
         return PairData({
             pair: _pair,
@@ -76,8 +85,11 @@ contract UiDataProviderIsolated {
                 maxOracleDeviation: maxOracleDeviation,
                 lastTimestamp: lastTimestampExchRate,
                 lowExchangeRate: lowExchangeRate,
-                highExchangeRate: highExchangeRate
-            })
+                highExchangeRate: highExchangeRate,
+                chainlinkAssetAddress: oracleChainlink.CHAINLINK_MULTIPLY_ADDRESS(),
+                chainlinkCollateralAddress: oracleChainlink.CHAINLINK_DIVIDE_ADDRESS()
+            }),
+            availableLiquidity: availableLiquidity
         });
     }
 }

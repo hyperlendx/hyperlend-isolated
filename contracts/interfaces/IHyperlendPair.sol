@@ -160,10 +160,6 @@ interface IHyperlendPair {
 
     function name() external view returns (string memory);
 
-    function oracleDivide() external view returns (address);
-
-    function oracleMultiply() external view returns (address);
-
     function oracleNormalization() external view returns (uint256);
 
     function owner() external view returns (address);

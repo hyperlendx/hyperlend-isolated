@@ -44,4 +44,9 @@ module.exports = {
             },
         ],
     },
+    sourcify: {
+        enabled: true,
+        apiUrl: "https://sourcify.parsec.finance/verify",
+        browserUrl: "https://testnet.purrsec.com/",
+    }
 };
