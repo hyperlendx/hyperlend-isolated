@@ -1,5 +1,7 @@
 const { ethers } = require("hardhat");
 
+const { verify } = require("../utils/verify")
+
 async function main({
     suffix, //name of the rate contract
     vertexUtilization, //The utilization at which the slope increases
@@ -23,6 +25,20 @@ async function main({
         maxFullUtilizationRate,
         rateHalfLife
     )
+
+    await verify(interestRate.target, [
+        suffix,
+        vertexUtilization,
+        vertexRatePercentOfDelta,
+        minUtil,
+        maxUtil,
+        zeroUtilizationRate,
+        minFullUtilizationRate,
+        maxFullUtilizationRate,
+        rateHalfLife
+    ], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
 
     // console.log(`VariableInterestRate contract deployed to ${interestRate.target}`)
 

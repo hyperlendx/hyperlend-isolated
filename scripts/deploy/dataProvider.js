@@ -2,6 +2,8 @@ const { ethers } = require("hardhat");
 const fs = require("fs")
 const path = require("path")
 
+const { verify } = require("../utils/verify")
+
 main()
 
 async function main() {
@@ -10,8 +12,8 @@ async function main() {
     const DataProvider = await ethers.getContractFactory("UiDataProviderIsolated");
     const dataProvider = await DataProvider.deploy()
 
-    console.log(dataProvider)
-
-    console.log(await dataProvider.getPairData('0xB1ed098b6b7Ae18b0Aa822c90a1E0371c7fDb96D'))
+    await verify(dataProvider.target, [], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
 }
 

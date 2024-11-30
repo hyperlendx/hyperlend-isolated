@@ -1,5 +1,7 @@
 const { ethers } = require("hardhat");
 
+const { verify } = require("../utils/verify")
+
 async function main({
     baseToken,
     quoteToken,
@@ -21,6 +23,18 @@ async function main({
     )
 
     // console.log(`Oracle contract deployed to ${oracle.target}`)
+
+    await verify(oracle.target, [
+        baseToken,
+        quoteToken,
+        chainlinkMultiplyAddress,
+        chainlinkDivideAddress,
+        maxOracleDelay,
+        timelockAddress,
+        name
+    ], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
 
     return {
         oracle: oracle

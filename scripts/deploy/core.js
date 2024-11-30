@@ -2,6 +2,8 @@ const { ethers } = require("hardhat");
 const fs = require("fs")
 const path = require("path")
 
+const { verify } = require("../utils/verify")
+
 async function main() {
     const [deployer, admin, borrower, lender] = await hre.ethers.getSigners();
 
@@ -10,16 +12,28 @@ async function main() {
     const Timelock = await ethers.getContractFactory("Timelock");
     const timelock = await Timelock.deploy(admin.address, 60 * 60 * 24 * 2)
     // console.log(`Timelock deployed to ${timelock.target}`)
+
+    await verify(timelock.target, [admin.address, 60 * 60 * 24 * 2], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
     
     const HyperlendWhitelist = await ethers.getContractFactory("HyperlendWhitelist");
     const hyperlendWhitelist = await HyperlendWhitelist.deploy();
     await hyperlendWhitelist.setHyperlendDeployerWhitelist([deployer.address], [true])
     // console.log(`HyperlendWhitelist deployed to ${hyperlendWhitelist.target}`)
 
+    await verify(hyperlendWhitelist.target, [deployer.address], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
+
     const initialDeployers = [deployer.address, admin.address]
     const HyperlendPairRegistry = await ethers.getContractFactory("HyperlendPairRegistry");
     const hyperlendPairRegistry = await HyperlendPairRegistry.deploy(deployer.address, initialDeployers);
     // console.log(`HyperlendPairRegistry deployed to ${hyperlendPairRegistry.target}`)
+
+    await verify(hyperlendPairRegistry.target, [deployer.address, initialDeployers], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
 
     const constructorParams = {
         circuitBreaker: admin.address,
@@ -36,6 +50,10 @@ async function main() {
     }
     const hyperlendPairDeployer = await HyperlendPairDeployer.deploy(hyperlendPairDeployerParams);
     // console.log(`HyperlendPairDeployer deployed to ${hyperlendPairDeployer.target}`)
+
+    await verify(hyperlendPairDeployer.target, [hyperlendPairDeployerParams], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
 
     //set deployer contract as deployer in pairRegistry
     await hyperlendPairRegistry.setDeployers([hyperlendPairDeployer.target], [true])

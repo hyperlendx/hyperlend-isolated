@@ -1,5 +1,7 @@
 const { ethers } = require("hardhat");
 
+const { verify } = require("../utils/verify")
+
 async function main({
     hyperlendPairRegistry,
     hyperlendPairDeployerAddress,
@@ -45,6 +47,10 @@ async function main({
 
     let newPairIndex = await pairRegistry.deployedPairsLength()
     let newPairAddress = await pairRegistry.deployedPairsArray(Number(newPairIndex)-1)
+
+    await verify(newPairAddress, [configData], null, {
+        verificationDataDir: null, verificationDataPath: null
+    })
 
     return newPairAddress;
 }

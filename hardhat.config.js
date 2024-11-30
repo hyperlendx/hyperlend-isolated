@@ -44,6 +44,21 @@ module.exports = {
             },
         ],
     },
+    etherscan: {
+        apiKey: {
+            hyperEvmTestnet: "empty"
+        },
+        customChains: [
+            {
+                network: "hyperEvmTestnet",
+                chainId: 998,
+                urls: {
+                    apiURL: "https://explorer.hyperlend.finance/api",
+                    browserURL: "https://explorer.hyperlend.finance"
+                }
+            }
+        ]
+    },
     sourcify: {
         enabled: true,
         apiUrl: "https://sourcify.parsec.finance/verify",
