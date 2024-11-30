@@ -18,3 +18,5 @@ typechain
 scripts/deployments
 
 scripts/utils/verifications
+
+.vscode

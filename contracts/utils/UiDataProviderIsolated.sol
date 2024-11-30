@@ -60,8 +60,6 @@ contract UiDataProviderIsolated {
 
         OracleChainlink oracleChainlink = OracleChainlink(oracle);
 
-        uint256 availableLiquidity = totalAssetAmount - ERC20(pair.asset()).balanceOf(_pair);
-
         return PairData({
             pair: _pair,
             asset: pair.asset(),
@@ -89,7 +87,7 @@ contract UiDataProviderIsolated {
                 chainlinkAssetAddress: oracleChainlink.CHAINLINK_MULTIPLY_ADDRESS(),
                 chainlinkCollateralAddress: oracleChainlink.CHAINLINK_DIVIDE_ADDRESS()
             }),
-            availableLiquidity: availableLiquidity
+            availableLiquidity: totalAssetAmount - totalBorrowAmount
         });
     }
 }
