@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
-import { IHyperlendPair } from '../interfaces/IHyperlendPair.sol';
+import { HyperlendPair } from '../HyperlendPair.sol';
 import { OracleChainlink } from '../oracles/OracleChainlink.sol';
 
 contract UiDataProviderIsolated {
@@ -38,8 +38,17 @@ contract UiDataProviderIsolated {
         uint256 availableLiquidity;
     }
 
+    struct UserData {
+        address user;
+        address pair;
+        uint256 userAssets;
+        uint256 userCollateral;
+        uint256 userBorrow;
+        uint256 maxWithdraw;
+    }
+
     function getPairData(address _pair) external view returns (PairData memory pairData) {
-        IHyperlendPair pair = IHyperlendPair(_pair);
+        HyperlendPair pair = HyperlendPair(_pair);
 
         (uint128 totalAssetAmount, ) = pair.totalAsset();
         (uint128 totalBorrowAmount, ) = pair.totalBorrow();
@@ -88,6 +97,25 @@ contract UiDataProviderIsolated {
                 chainlinkCollateralAddress: oracleChainlink.CHAINLINK_DIVIDE_ADDRESS()
             }),
             availableLiquidity: totalAssetAmount - totalBorrowAmount
+        });
+    }
+
+    function getUserData(address _user, address _pair) external view returns (UserData memory) {
+        HyperlendPair pair = HyperlendPair(_pair);
+
+        (
+            uint256 _userAssetShares,
+            uint256 _userBorrowShares,
+            uint256 _userCollateralBalance
+        ) = pair.getUserSnapshot(_user);
+
+        return UserData({
+            user: _user,
+            pair: _pair,
+            userAssets: pair.toAssetAmount(_userAssetShares),
+            userCollateral: _userCollateralBalance,
+            userBorrow: pair.toBorrowAmount(_userBorrowShares),
+            maxWithdraw: pair.maxWithdraw(_user)
         });
     }
 }

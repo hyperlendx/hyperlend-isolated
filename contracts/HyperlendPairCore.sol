@@ -132,9 +132,9 @@ abstract contract HyperlendPairCore is
                 uint256 _liquidationFee,
                 uint256 _protocolLiquidationFee
             ) = abi.decode(
-                    _configData,
-                    (address, address, address, uint32, address, uint64, uint256, uint256, uint256)
-                );
+                _configData,
+                (address, address, address, uint32, address, uint64, uint256, uint256, uint256)
+            );
 
             // Pair Settings
             assetContract = IERC20(_asset);

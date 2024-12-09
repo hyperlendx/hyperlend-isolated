@@ -12,11 +12,11 @@ async function main(){
 
     // const oracleConfig = {
     //     baseToken: "0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7", //asset WETH
-    //     quoteToken: "0x4D6b8f9518b0b92080b5eAAf80bD505734A059Ae", //collateral stHYPE
+    //     quoteToken: "0xe2FbC9cB335A65201FcDE55323aE0F4E8A96A616", //collateral stHYPE
     //     chainlinkMultiplyAddress: '0xdF6CeC37cF3EB6c69146A0787f8488B94ef3c22E', //WETH provider
     //     chainlinkDivideAddress: '0x713c630Cbb3A37b45bA3921125abb3D0D4F4d8ef', //stHYPE provider
     //     maxOracleDelay: "1000000",
-    //     timelockAddress: "0x7aD41C2D642Ba3AdC42CdC06eE1860aaB7DCF4d6",
+    //     timelockAddress: "0x33e99304C3F628067Bb0939b21820d7Ba39913AB",
     //     name: "ChainlinkSingle-WETH-stTESTH"
     // }
     // let { oracle } = await deployOracleScript.main(oracleConfig)
@@ -39,12 +39,12 @@ async function main(){
     // console.log(interestRate)
 
     let pairConfig = {
-        hyperlendPairRegistry: "0xB6aE067434D36684006b4561328eF4fA8016ee22",
-        hyperlendPairDeployerAddress: "0x3b4537eE82e3d6361a3D57744e64D02f3E0C2B7c",
+        hyperlendPairRegistry: "0x274396Ec36D17dAbC018d9437D5a4C0D0fD503D0",
+        hyperlendPairDeployerAddress: "0x0d17A8856aD18C5CCE4B426744Fee0d918c6a7D4",
         assetTokenAddress: "0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7", //borrow WETH
-        collateralTokenAddress: "0x4D6b8f9518b0b92080b5eAAf80bD505734A059Ae", //supply stHYPE as collateral
-        interestRateAddress: '0x4672D7CAF91cC71E52Ad00CB533DCA6Db67c13aE',
-        oracleAddress: '0x6f213d82cbEFAB36556aE61bD8CaCb625d30e4e3',
+        collateralTokenAddress: "0xe2FbC9cB335A65201FcDE55323aE0F4E8A96A616", //supply stHYPE as collateral
+        interestRateAddress: '0x339a57F0bc7ad67dC1956aE5254038AEae1cAe9B',
+        oracleAddress: '0x9d59b30B5311B31F8EEE7dB8252355B860DCd2C1',
         maxOracleDeviation: "5000", //5%
         fullUtilizationRate: "9500000000", //~30% start APR
         maxLTV: "75000", //75%
