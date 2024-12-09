@@ -41,6 +41,7 @@ contract UiDataProviderIsolated {
     struct UserData {
         address user;
         address pair;
+        uint8 decimals;
         uint256 userAssets;
         uint256 userCollateral;
         uint256 userBorrow;
@@ -72,7 +73,7 @@ contract UiDataProviderIsolated {
         return PairData({
             pair: _pair,
             asset: pair.asset(),
-            collateral: pair.collateralContract(),
+            collateral: address(pair.collateralContract()),
             ltv: pair.maxLTV(),
             totalAsset: totalAssetAmount,
             totalBorrow: totalBorrowAmount,
@@ -112,9 +113,10 @@ contract UiDataProviderIsolated {
         return UserData({
             user: _user,
             pair: _pair,
-            userAssets: pair.toAssetAmount(_userAssetShares),
+            decimals: pair.decimals(),
+            userAssets: pair.toAssetAmount(_userAssetShares, false, true),
             userCollateral: _userCollateralBalance,
-            userBorrow: pair.toBorrowAmount(_userBorrowShares),
+            userBorrow: pair.toBorrowAmount(_userBorrowShares, false, true),
             maxWithdraw: pair.maxWithdraw(_user)
         });
     }
