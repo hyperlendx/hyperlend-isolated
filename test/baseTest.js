@@ -61,7 +61,7 @@ describe("BaseTest", function () {
             fullUtilizationRate: "9500000000", //~30% start APR
             maxLTV: "75000", //75%
             cleanLiquidationFee: "10000", //10%
-            protocolLiquidationFee: "10000" //10% of the liquidator's fee
+            protocolLiquidationFee: "1000" //10% of the liquidator's fee
         }
         let pairAddress = await setup.deployPair(pairConfig)
         let pair = (await ethers.getContractFactory("HyperlendPair")).attach(pairAddress)
