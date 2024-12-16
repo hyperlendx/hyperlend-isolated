@@ -3,7 +3,6 @@ pragma solidity ^0.8.19;
 
 import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import { IHyperlendPair } from '../interfaces/IHyperlendPair.sol';
-import { IHyperlendPairRegistry } from '../interfaces/IHyperlendPairRegistry.sol';
 
 import { HyperlendPairDeployer } from '../HyperlendPairDeployer.sol';
 import { Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
@@ -29,25 +28,20 @@ contract ListingsConfigEngine is Ownable2Step {
         uint256 _collateralAmount, 
         bytes memory _configData
     ) external onlyOwner(){
-        IHyperlendPairRegistry pairRegistry = IHyperlendPairRegistry(_pairDeployer.hyperlendPairRegistryAddress());
-
         //deploy new pair contract
-        _pairDeployer.deploy(_configData);
-
-        //get address of the new pair contract
-        uint256 newPairIndex = pairRegistry.deployedPairsLength();
-        IHyperlendPair newPairAddress = IHyperlendPair(pairRegistry.deployedPairsArray(newPairIndex - 1));
+        address newPairAddress = _pairDeployer.deploy(_configData);
+        IHyperlendPair newPair = IHyperlendPair(newPairAddress);
 
         //transfer seed amounts from msg.sender
         _asset.transferFrom(msg.sender, address(this), _assetAmount);
         _collateral.transferFrom(msg.sender, address(this), _collateralAmount);
 
         //approve pair to spend seed amounts
-        _asset.approve(address(newPairAddress), _assetAmount);
-        _collateral.approve(address(newPairAddress), _collateralAmount);
+        _asset.approve(address(newPair), _assetAmount);
+        _collateral.approve(address(newPair), _collateralAmount);
 
         //deposit asset and add collateral
-        newPairAddress.deposit(_assetAmount, msg.sender);
-        newPairAddress.addCollateral(_collateralAmount, msg.sender);
+        newPair.deposit(_assetAmount, msg.sender);
+        newPair.addCollateral(_collateralAmount, msg.sender);
     }
 }
