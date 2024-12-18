@@ -13,7 +13,7 @@ async function main({
     fullUtilizationRate = "9500000000", //
     maxLTV = "75000", //75%
     cleanLiquidationFee = "10000", //10%
-    protocolLiquidationFee = "10000" //10% of the liquidator's fee
+    protocolLiquidationFee = "1000" //10% of the liquidator's fee
 }) {
     const HyperlendPairDeployer = await ethers.getContractFactory("HyperlendPairDeployer");
     const hyperlendPairDeployer = HyperlendPairDeployer.attach(hyperlendPairDeployerAddress)

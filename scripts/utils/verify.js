@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path")
 
-async function verify(address, args, libraries, { verificationDataDir, verificationDataPath }){
+async function verify(address, args, libraries, { verificationDataDir, verificationDataPath }, showLogs = false){
     const params = {
         address: address,
         constructorArguments: args,
@@ -12,12 +12,14 @@ async function verify(address, args, libraries, { verificationDataDir, verificat
     }
 
     try {
-        console.log(`verifying ${address} with args: ${args}`);
+        if (showLogs) console.log(`verifying ${address} with args: ${args}`);
         await storeVerification(address, args, libraries, { verificationDataDir, verificationDataPath })
         await hre.run("verify:verify", params);
     } catch (e) {
-        console.log(`verification failed`);
-        console.log(e);
+        if (showLogs) {
+            console.log(`verification failed`);
+            console.log(e);
+        }
     }
 }
 
