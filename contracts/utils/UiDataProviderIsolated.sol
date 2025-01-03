@@ -4,6 +4,7 @@ pragma solidity ^0.8.19;
 import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
 import { HyperlendPair } from '../HyperlendPair.sol';
 import { OracleChainlink } from '../oracles/OracleChainlink.sol';
+import { HyperlendPairRegistry } from '../HyperlendPairRegistry.sol';
 
 contract UiDataProviderIsolated {
     struct InterestRateInfo {
@@ -47,6 +48,19 @@ contract UiDataProviderIsolated {
         uint256 userBorrow;
         uint256 maxWithdraw;
     }
+
+    struct UserPosition {
+        address pair;
+        address asset;
+        address collateral;
+        uint256 suppliedAssets;
+        uint256 borrowedAssets;
+        uint256 suppliedCollateral;
+        uint256 ratePerSec;
+        uint256 utilization;
+    }
+
+    uint256 public constant UTIL_PREC = 1e5;
 
     function getPairData(address _pair) external view returns (PairData memory pairData) {
         HyperlendPair pair = HyperlendPair(_pair);
@@ -119,5 +133,37 @@ contract UiDataProviderIsolated {
             userBorrow: pair.toBorrowAmount(_userBorrowShares, false, true),
             maxWithdraw: pair.maxWithdraw(_user)
         });
+    }
+
+    function getUserPairs(address _user, address _registry) external view returns (UserPosition[] memory){
+        address[] memory pairs = HyperlendPairRegistry(_registry).getAllPairAddresses();
+
+        UserPosition[] memory userPositions = new UserPosition[](pairs.length);
+        for (uint256 i = 0; i < pairs.length; i++){
+            HyperlendPair pair = HyperlendPair(pairs[i]);
+            (
+                uint256 userAssetShares,
+                uint256 userBorrowShares,
+                uint256 userCollateralBalance
+            ) = pair.getUserSnapshot(_user);
+            if (userAssetShares > 0 || userBorrowShares > 0 || userCollateralBalance > 0){
+                (,,,uint64 ratePerSec,) = pair.currentRateInfo();
+                (uint128 borrowAmount,) = pair.totalBorrow();
+                (uint128 assetAmount,) = pair.totalAsset();
+
+                userPositions[i] = UserPosition({
+                    pair: pairs[i],
+                    asset: pair.asset(),
+                    collateral: address(pair.collateralContract()),
+                    suppliedAssets: userAssetShares,
+                    borrowedAssets: userBorrowShares,
+                    suppliedCollateral: userCollateralBalance,
+                    ratePerSec: ratePerSec,
+                    utilization: assetAmount == 0 ? 0 : (UTIL_PREC * borrowAmount) / assetAmount
+                });
+            }
+        }
+
+        return userPositions;
     }
 }
