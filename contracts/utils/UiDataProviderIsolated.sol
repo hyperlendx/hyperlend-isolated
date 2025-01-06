@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import { IERC20Metadata } from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
 import { HyperlendPair } from '../HyperlendPair.sol';
 import { OracleChainlink } from '../oracles/OracleChainlink.sol';
 import { HyperlendPairRegistry } from '../HyperlendPairRegistry.sol';
@@ -53,6 +54,8 @@ contract UiDataProviderIsolated {
         address pair;
         address asset;
         address collateral;
+        uint256 assetDecimals;
+        uint256 collateralDecimals;
         uint256 suppliedAssets;
         uint256 borrowedAssets;
         uint256 suppliedCollateral;
@@ -151,10 +154,15 @@ contract UiDataProviderIsolated {
                 (uint128 borrowAmount,) = pair.totalBorrow();
                 (uint128 assetAmount,) = pair.totalAsset();
 
+                IERC20Metadata asset = IERC20Metadata(address(pair.asset()));
+                IERC20Metadata collateral = IERC20Metadata(address(pair.collateralContract()));
+
                 userPositions[i] = UserPosition({
                     pair: pairs[i],
-                    asset: pair.asset(),
-                    collateral: address(pair.collateralContract()),
+                    asset: address(asset),
+                    collateral: address(collateral),
+                    assetDecimals: asset.decimals(),
+                    collateralDecimals: collateral.decimals(),
                     suppliedAssets: userAssetShares,
                     borrowedAssets: userBorrowShares,
                     suppliedCollateral: userCollateralBalance,
