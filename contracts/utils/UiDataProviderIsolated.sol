@@ -7,6 +7,10 @@ import { HyperlendPair } from '../HyperlendPair.sol';
 import { OracleChainlink } from '../oracles/OracleChainlink.sol';
 import { HyperlendPairRegistry } from '../HyperlendPairRegistry.sol';
 
+interface AggregatorInterface {
+    function latestAnswer() external view returns (int256);
+}
+
 contract UiDataProviderIsolated {
     struct InterestRateInfo {
         uint32 lastBlock;
@@ -48,6 +52,8 @@ contract UiDataProviderIsolated {
         uint256 userCollateral;
         uint256 userBorrow;
         uint256 maxWithdraw;
+        uint256 userAssetsShares;
+        uint256 userBorrowShares;
     }
 
     struct UserPosition {
@@ -58,9 +64,14 @@ contract UiDataProviderIsolated {
         uint256 collateralDecimals;
         uint256 suppliedAssets;
         uint256 borrowedAssets;
+        uint256 suppliedShares;
+        uint256 borrowedShares;
         uint256 suppliedCollateral;
         uint256 ratePerSec;
         uint256 utilization;
+        uint256 feeToProtocolRate;
+        int256 assetPrice;
+        int256 collateralPrice;
     }
 
     uint256 public constant UTIL_PREC = 1e5;
@@ -134,6 +145,8 @@ contract UiDataProviderIsolated {
             userAssets: pair.toAssetAmount(_userAssetShares, false, true),
             userCollateral: _userCollateralBalance,
             userBorrow: pair.toBorrowAmount(_userBorrowShares, false, true),
+            userAssetsShares: _userAssetShares,
+            userBorrowShares: _userBorrowShares,
             maxWithdraw: pair.maxWithdraw(_user)
         });
     }
@@ -150,9 +163,10 @@ contract UiDataProviderIsolated {
                 uint256 userCollateralBalance
             ) = pair.getUserSnapshot(_user);
             if (userAssetShares > 0 || userBorrowShares > 0 || userCollateralBalance > 0){
-                (,,,uint64 ratePerSec,) = pair.currentRateInfo();
+                (,uint256 feeToProtocolRate,,uint64 ratePerSec,) = pair.currentRateInfo();
                 (uint128 borrowAmount,) = pair.totalBorrow();
                 (uint128 assetAmount,) = pair.totalAsset();
+                (address oracle,,,,) = pair.exchangeRateInfo();
 
                 IERC20Metadata asset = IERC20Metadata(address(pair.asset()));
                 IERC20Metadata collateral = IERC20Metadata(address(pair.collateralContract()));
@@ -163,11 +177,16 @@ contract UiDataProviderIsolated {
                     collateral: address(collateral),
                     assetDecimals: asset.decimals(),
                     collateralDecimals: collateral.decimals(),
-                    suppliedAssets: userAssetShares,
-                    borrowedAssets: userBorrowShares,
+                    suppliedAssets: pair.toAssetAmount(userAssetShares, false, true),
+                    borrowedAssets: pair.toBorrowAmount(userBorrowShares, false, true),
+                    suppliedShares: userAssetShares,
+                    borrowedShares: userBorrowShares,
                     suppliedCollateral: userCollateralBalance,
                     ratePerSec: ratePerSec,
-                    utilization: assetAmount == 0 ? 0 : (UTIL_PREC * borrowAmount) / assetAmount
+                    feeToProtocolRate: feeToProtocolRate,
+                    utilization: assetAmount == 0 ? 0 : (UTIL_PREC * borrowAmount) / assetAmount,
+                    assetPrice: AggregatorInterface(OracleChainlink(oracle).CHAINLINK_MULTIPLY_ADDRESS()).latestAnswer(),
+                    collateralPrice: AggregatorInterface(OracleChainlink(oracle).CHAINLINK_DIVIDE_ADDRESS()).latestAnswer()
                 });
             }
         }

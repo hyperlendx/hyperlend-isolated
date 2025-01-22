@@ -83,8 +83,7 @@ contract OracleChainlink is Timelock2Step {
 
             // If data is stale or negative, set bad data to true and return
             if (_answer <= 0 || (block.timestamp - _updatedAt > maxOracleDelay)) {
-                _isBadData = true;
-                return (_isBadData, _price);
+                revert("invalid oracle price");
             }
             _price = _price * uint256(_answer);
         }
@@ -96,8 +95,7 @@ contract OracleChainlink is Timelock2Step {
 
             // If data is stale or negative, set bad data to true and return
             if (_answer <= 0 || (block.timestamp - _updatedAt > maxOracleDelay)) {
-                _isBadData = true;
-                return (_isBadData, _price);
+                revert("invalid oracle price");
             }
             _price = _price / uint256(_answer);
         }

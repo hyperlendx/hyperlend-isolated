@@ -10,6 +10,10 @@ main()
 async function main(){
     const [deployer, admin] = await hre.ethers.getSigners();
 
+    const Timelock = await ethers.getContractFactory("UiDataProviderIsolated");
+    const timelock = await Timelock.deploy()
+    console.log(timelock)
+
     // console.log(await deployCoreScript.main())
 
     // const oracleConfig = {
@@ -26,25 +30,25 @@ async function main(){
     // console.log(await oracle.getPrices())
     // console.log(await oracle.decimals())
 
-    const timelock = await ethers.getContractAt("Timelock", "0x33e99304C3F628067Bb0939b21820d7Ba39913AB")
+    // const timelock = await ethers.getContractAt("Timelock", "0x33e99304C3F628067Bb0939b21820d7Ba39913AB")
     // // const eta = parseFloat((new Date().getTime() / 1000) + 172800 + 10).toFixed(0)
-    console.log(await timelock.connect(admin).executeTransaction(
-        "0xbb727Bce50C12c9472Bf5d6F0e76388455ec62d5",
-        0,
-        "setOracle(address,uint32)",
-        "0x000000000000000000000000fc7a87d9413f689d1722bac165bc0d3af88a3cd90000000000000000000000000000000000000000000000000000000000001388",
-        '1734867887'
-    ))
+    // console.log(await timelock.connect(admin).executeTransaction(
+    //     "0xbb727Bce50C12c9472Bf5d6F0e76388455ec62d5",
+    //     0,
+    //     "setOracle(address,uint32)",
+    //     "0x000000000000000000000000fc7a87d9413f689d1722bac165bc0d3af88a3cd90000000000000000000000000000000000000000000000000000000000001388",
+    //     '1734867887'
+    // ))
     // console.log(eta)
     
     // // const eta = parseFloat((new Date().getTime() / 1000) + 172800 + 10).toFixed(0)
-    console.log(await timelock.connect(admin).executeTransaction(
-        "0x0B37927864EFcEf9829B62cca4C9dC9453C51EA2",
-        0,
-        "setOracle(address,uint32)",
-        "0x000000000000000000000000a4c7ea7164d0e38868fd01f252eb463c734b27a20000000000000000000000000000000000000000000000000000000000001388",
-        '1734868072'
-    ))
+    // console.log(await timelock.connect(admin).executeTransaction(
+    //     "0x0B37927864EFcEf9829B62cca4C9dC9453C51EA2",
+    //     0,
+    //     "setOracle(address,uint32)",
+    //     "0x000000000000000000000000a4c7ea7164d0e38868fd01f252eb463c734b27a20000000000000000000000000000000000000000000000000000000000001388",
+    //     '1734868072'
+    // ))
     // console.log(eta)
 
     // const interestRateConfig = {
