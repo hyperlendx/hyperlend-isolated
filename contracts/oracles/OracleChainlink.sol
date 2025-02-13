@@ -51,6 +51,7 @@ contract OracleChainlink is Timelock2Step {
         uint8 _divideDecimals = _chainlinkDivideAddress != address(0)
             ? AggregatorV3Interface(_chainlinkDivideAddress).decimals()
             : 0;
+        require(_divideDecimals + IERC20Metadata(_quoteToken).decimals() <= _multiplyDecimals + IERC20Metadata(_baseToken).decimals() + 18, "negative exponent");
         CHAINLINK_NORMALIZATION =
             10 **
                 (18 +
