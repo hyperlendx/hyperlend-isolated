@@ -1179,7 +1179,7 @@ abstract contract HyperlendPairCore is
         uint256 _borrowShares = _borrowAsset(_borrowAmount.toUint128(), address(this));
 
         // Interactions
-        _assetContract.approve(_swapperAddress, _borrowAmount);
+        _assetContract.safeIncreaseAllowance(_swapperAddress, _borrowAmount);
 
         // Even though swappers are trusted, we verify the balance before and after swap
         uint256 _initialCollateralBalance = _collateralContract.balanceOf(address(this));
@@ -1264,7 +1264,7 @@ abstract contract HyperlendPairCore is
         _removeCollateral(_collateralToSwap, address(this), msg.sender);
 
         // Interactions
-        _collateralContract.approve(_swapperAddress, _collateralToSwap);
+        _collateralContract.safeIncreaseAllowance(_swapperAddress, _collateralToSwap);
 
         // Even though swappers are trusted, we verify the balance before and after swap
         uint256 _initialAssetBalance = _assetContract.balanceOf(address(this));
