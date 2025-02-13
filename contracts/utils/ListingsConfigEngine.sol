@@ -6,11 +6,14 @@ import { IHyperlendPair } from '../interfaces/IHyperlendPair.sol';
 
 import { HyperlendPairDeployer } from '../HyperlendPairDeployer.sol';
 import { Ownable2Step } from '@openzeppelin/contracts/access/Ownable2Step.sol';
+import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 /// @title ListingsConfigEngine
 /// @author HyperLend
 /// @notice Contract used to seed new pairs after deployment
 contract ListingsConfigEngine is Ownable2Step {
+    using SafeERC20 for ERC20;
+
     constructor() Ownable2Step() {}
 
     /// @notice used to deploy new pairs
@@ -33,12 +36,12 @@ contract ListingsConfigEngine is Ownable2Step {
         IHyperlendPair newPair = IHyperlendPair(newPairAddress);
 
         //transfer seed amounts from msg.sender
-        _asset.transferFrom(msg.sender, address(this), _assetAmount);
-        _collateral.transferFrom(msg.sender, address(this), _collateralAmount);
+        _asset.safeTransferFrom(msg.sender, address(this), _assetAmount);
+        _collateral.safeTransferFrom(msg.sender, address(this), _collateralAmount);
 
         //approve pair to spend seed amounts
-        _asset.approve(address(newPair), _assetAmount);
-        _collateral.approve(address(newPair), _collateralAmount);
+        _asset.safeIncreaseAllowance(address(newPair), _assetAmount);
+        _collateral.safeIncreaseAllowance(address(newPair), _collateralAmount);
 
         //deposit asset and add collateral
         newPair.deposit(_assetAmount, msg.sender);
