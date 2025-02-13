@@ -70,4 +70,8 @@ library SafeERC20 {
     function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
         OZSafeERC20.safeTransferFrom(token, from, to, value);
     }
+
+    function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
+        OZSafeERC20.safeIncreaseAllowance(token, spender, value);
+    }
 }
