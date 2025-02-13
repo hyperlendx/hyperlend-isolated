@@ -28,7 +28,7 @@ contract DualOracleChainlinkUniV3 is Timelock2Step {
     // Config Data
     uint8 internal constant DECIMALS = 18;
     string public name;
-    uint256 public oracleType = 1;
+    uint256 immutable public oracleType = 1;
 
     // events
     /// @notice The ```SetMaxOracleDelay``` event is emitted when the max oracle delay is set
