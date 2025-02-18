@@ -18,7 +18,14 @@ module.exports = {
                 mnemonic,
             },
             chainId: 998,
-            url: 'https://api.hyperliquid-testnet.xyz/evm',
+            url: 'https://rpc.hyperliquid-testnet.xyz/evm',
+        },
+        hyperEvm: {
+            accounts: {
+                mnemonic,
+            },
+            chainId: 999,
+            url: 'https://rpc.hyperliquid.xyz/evm'
         }
     },
     paths: {
@@ -46,7 +53,8 @@ module.exports = {
     },
     etherscan: {
         apiKey: {
-            hyperEvmTestnet: "empty"
+            hyperEvmTestnet: "empty",
+            hyperEvm: "empty"
         },
         customChains: [
             {
@@ -56,12 +64,20 @@ module.exports = {
                     apiURL: "https://explorer.hyperlend.finance/api",
                     browserURL: "https://explorer.hyperlend.finance"
                 }
+            },
+            {
+                network: "hyperEvm",
+                chainId: 999,
+                urls: {
+                    apiURL: "https://hyperliquid.cloud.blockscout.com/api",
+                    browserURL: "https://hyperliquid.cloud.blockscout.com"
+                }
             }
         ]
     },
     sourcify: {
         enabled: true,
-        apiUrl: "https://sourcify.parsec.finance/verify",
-        browserUrl: "https://testnet.purrsec.com/",
+        apiUrl: "https://sourcify.parsec.finance",
+        browserUrl: "https://purrsec.com/",
     }
 };
