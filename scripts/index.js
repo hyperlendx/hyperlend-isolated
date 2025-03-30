@@ -10,34 +10,45 @@ main()
 async function main(){
     const [deployer, admin] = await hre.ethers.getSigners();
 
-    const Timelock = await ethers.getContractFactory("UiDataProviderIsolated");
-    const timelock = await Timelock.deploy()
-    console.log(timelock)
+    // const Timelock = await ethers.getContractFactory("UiDataProviderIsolated");
+    // const timelock = await Timelock.deploy()
+    // console.log(timelock)
 
     // console.log(await deployCoreScript.main())
 
     // const oracleConfig = {
     //     baseToken: "0xe0bdd7e8b7bf5b15dcDA6103FCbBA82a460ae2C7", //asset WETH
-    //     quoteToken: "0x453b63484b11bbF0b61fC7E854f8DAC7bdE7d458", //collateral
+    //     quoteToken: "0xe2FbC9cB335A65201FcDE55323aE0F4E8A96A616", //collateral stHYPE
     //     chainlinkMultiplyAddress: '0xBf3bA2b090188B40eF83145Be0e9F30C6ca63689', //WETH provider
-    //     chainlinkDivideAddress: '0x85C4F855Bc0609D2584405819EdAEa3aDAbfE97D', //collateral provider
-    //     maxOracleDelay: "1000000",
+    //     chainlinkDivideAddress: '0x11CE4F650957e03f5a465839F7f699d19dB43c41', //collateral provider
+    //     maxOracleDelay: "86400",
     //     timelockAddress: "0x33e99304C3F628067Bb0939b21820d7Ba39913AB",
-    //     name: "ChainlinkSingle-WETH-MBTC"
+    //     name: "Redstone-WETH-stHYPE"
     // }
     // let { oracle } = await deployOracleScript.main(oracleConfig)
     // console.log(oracle)
     // console.log(await oracle.getPrices())
     // console.log(await oracle.decimals())
 
+    // const pair = await ethers.getContractAt("HyperlendPair", "0xbb727Bce50C12c9472Bf5d6F0e76388455ec62d5")
+    // // console.log(await pair.exchangeRateInfo())
+    // const oracle = await ethers.getContractAt("OracleChainlink", "0x9A414698155452234ce8e3990BB8DBEdD49ef9Cd")
+    // console.log(await oracle.getPrices())
+    // console.log(await oracle.decimals())
+    //     // console.log(`baseToken`, await oracle.BASE_TOKEN())
+    // console.log(`quoteToken`, await oracle.QUOTE_TOKEN())
+
+    // console.log(`CHAINLINK_MULTIPLY_ADDRESS`, await oracle.CHAINLINK_MULTIPLY_ADDRESS())
+    // console.log(`CHAINLINK_DIVIDE_ADDRESS`, await oracle.CHAINLINK_DIVIDE_ADDRESS())
+
     // const timelock = await ethers.getContractAt("Timelock", "0x33e99304C3F628067Bb0939b21820d7Ba39913AB")
-    // // const eta = parseFloat((new Date().getTime() / 1000) + 172800 + 10).toFixed(0)
+    // const eta = parseFloat((new Date().getTime() / 1000) + 172800 + 10).toFixed(0)
     // console.log(await timelock.connect(admin).executeTransaction(
     //     "0xbb727Bce50C12c9472Bf5d6F0e76388455ec62d5",
     //     0,
     //     "setOracle(address,uint32)",
-    //     "0x000000000000000000000000fc7a87d9413f689d1722bac165bc0d3af88a3cd90000000000000000000000000000000000000000000000000000000000001388",
-    //     '1734867887'
+    //     "0x0000000000000000000000009a414698155452234ce8e3990bb8dbedd49ef9cd0000000000000000000000000000000000000000000000000000000000001388",
+    //     "1737728752" //after Jan 24 2025 15:25:52 GMT+0100
     // ))
     // console.log(eta)
     

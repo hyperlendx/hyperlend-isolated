@@ -527,6 +527,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         if (!isLiquidateAccessControlRevoked) _pauseLiquidate(false);
         if (!isInterestAccessControlRevoked) {
             _addInterest();
+            currentRateInfo.lastTimestamp = uint64(block.timestamp);
             _pauseInterest(false);
         }
     }
@@ -640,6 +641,7 @@ contract HyperlendPair is IERC20Metadata, HyperlendPairCore {
         if (isInterestAccessControlRevoked) revert AccessControlRevoked();
         // Resets the lastTimestamp which has the effect of no interest accruing over the pause period
         _addInterest();
+        if (_isPaused == false) currentRateInfo.lastTimestamp = uint64(block.timestamp);
         _pauseInterest(_isPaused);
     }
 

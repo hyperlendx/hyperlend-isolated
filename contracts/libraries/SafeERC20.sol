@@ -74,4 +74,8 @@ library SafeERC20 {
     function safeIncreaseAllowance(IERC20 token, address spender, uint256 value) internal {
         OZSafeERC20.safeIncreaseAllowance(token, spender, value);
     }
+
+    function safeApprove(IERC20 token, address to, uint256 value) internal {
+        OZSafeERC20.safeApprove(token, to, value);
+    }
 }
